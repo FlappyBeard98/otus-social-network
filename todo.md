@@ -1,0 +1,18 @@
+
+- [x] create repo
+- [ ] create mock service
+- [ ] setup deployment 
+- [ ] create db structure
+- [ ] create api and tests
+  - [ ] register profile name,surname,age,hobbies,city + login,password
+  - [ ] login
+  - [ ] logout
+  - [ ] get profile
+  - [ ] update profile
+  - [ ] get friends
+  - [ ] add friend
+  - [ ] remove friend
+  - [ ] find friends
+  - [ ] delete profile
+  - [ ] * send message to friend
+- [ ] prepare postman collection
