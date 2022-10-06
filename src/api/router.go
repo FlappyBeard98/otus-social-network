@@ -1,15 +1,33 @@
 package api
 
 import (
-	"github.com/labstack/echo/v4"
 	"net/http"
+	"social-network/app/command"
 	"social-network/app/query"
 	"social-network/common"
+
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/gogo/protobuf/vanity/command"
+	"github.com/labstack/echo/v4"
+	"github.com/zenazn/goji/web/middleware"
 )
 
 func SetupRoutes(echo *echo.Echo) {
-	g := echo.Group("test")
-	g.GET("/:name", wrap(query.NewHelloHandler()))
+	test := echo.Group("test")
+	test.GET("/:name", wrap(query.NewHelloHandler()))
+
+	echo.POST("/register",wrap(command.NewRegisterHandler()))
+	echo.POST("/login",wrap(command.NewLoginHandler()))
+	echo.GET("/profiles",wrap(query.NewProfilesByFilterHandler()))
+
+	
+	authed := echo.Group("public",middleware.BasicAuth()) //todo setup middleware
+	authed.GET("/profile/:id",wrap(query.NewProfileHandler()))
+	authed.POST("/profile/:id",wrap(command.NewSaveProfileHandler()))
+	authed.GET("/profile/:id/friends",wrap(query.NewFriendsHandler()))
+	authed.POST("/profile/:id/friends",wrap(command.NewAddFriendHandler()))
+	authed.DELETE("/profile/:id/friends",wrap(command.NewRemoveFriendHandler()))
+	authed.POST("/logout",wrap(command.NewLogoutHandler()))
 }
 
 func wrap[In any, Out any](handler common.Handler[In, Out]) echo.HandlerFunc {
