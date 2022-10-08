@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+          "type": "go",
+          "name": "default",
+          "goExecPath": "/usr/local/go/bin/go",
+          "buildTargets": []
+        }
+
+    ]
+}

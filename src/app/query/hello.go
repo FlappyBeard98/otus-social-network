@@ -1,14 +1,15 @@
 package query
 
 import (
-	"social-network/common"
+	"context"
+	"social-network/common/application"
 )
 
 type HelloQuery struct {
 	Name string `param:"name"`
 }
 
-type HelloHandler = common.Handler[HelloQuery, string]
+type HelloHandler = application.Handler[HelloQuery, string]
 
 type helloHandler struct {
 }
@@ -17,6 +18,6 @@ func NewHelloHandler() HelloHandler {
 	return &helloHandler{}
 }
 
-func (h *helloHandler) Handle(arg HelloQuery) (string, error) {
+func (h *helloHandler) Handle(_ context.Context, arg HelloQuery) (string, error) {
 	return "hello " + arg.Name, nil
 }

@@ -1,21 +1,24 @@
 package command
 
 import (
-	"social-network/common"
+	"context"
+	"database/sql"
+	"social-network/common/application"
 )
 
 type LoginCommand struct {
 }
 
-type LoginHandler = common.Handler[LoginCommand, interface{}]
+type LoginHandler = application.Handler[LoginCommand, interface{}]
 
 type loginHandler struct {
+	db *sql.DB
 }
 
-func NewLoginHandler() LoginHandler {
-	return &loginHandler{}
+func NewLoginHandler(db *sql.DB) LoginHandler {
+	return &loginHandler{db}
 }
 
-func (h *loginHandler) Handle(arg LoginCommand) (interface{}, error) {
+func (h *loginHandler) Handle(ctx context.Context, arg LoginCommand) (interface{}, error) {
 	return nil, nil
 }

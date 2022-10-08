@@ -1,21 +1,24 @@
 package command
 
 import (
-	"social-network/common"
+	"context"
+	"database/sql"
+	"social-network/common/application"
 )
 
 type AddFriendCommand struct {
 }
 
-type AddFriendHandler = common.Handler[AddFriendCommand, interface{}]
+type AddFriendHandler = application.Handler[AddFriendCommand, interface{}]
 
 type addFriendHandler struct {
+	db *sql.DB
 }
 
-func NewAddFriendHandler() AddFriendHandler {
-	return &addFriendHandler{}
+func NewAddFriendHandler(db *sql.DB) AddFriendHandler {
+	return &addFriendHandler{db}
 }
 
-func (h *addFriendHandler) Handle(arg AddFriendCommand) (interface{}, error) {
+func (h *addFriendHandler) Handle(ctx context.Context, arg AddFriendCommand) (interface{}, error) {
 	return nil, nil
 }

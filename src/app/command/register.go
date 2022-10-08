@@ -1,19 +1,24 @@
 package command
 
-import "social-network/common"
+import (
+	"context"
+	"database/sql"
+	"social-network/common/application"
+)
 
 type RegisterCommand struct {
 }
 
-type RegisterHandler = common.Handler[RegisterCommand, interface{}]
+type RegisterHandler = application.Handler[RegisterCommand, interface{}]
 
 type registerHandler struct {
+	db *sql.DB
 }
 
-func NewRegisterHandler() RegisterHandler {
-	return &registerHandler{}
+func NewRegisterHandler(db *sql.DB) RegisterHandler {
+	return &registerHandler{db}
 }
 
-func (h *registerHandler) Handle(arg RegisterCommand) (interface{}, error) {
+func (h *registerHandler) Handle(ctx context.Context, arg RegisterCommand) (interface{}, error) {
 	return nil, nil
 }

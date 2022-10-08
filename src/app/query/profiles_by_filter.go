@@ -1,19 +1,24 @@
 package query
 
-import "social-network/common"
+import (
+	"context"
+	"database/sql"
+	"social-network/common/application"
+)
 
 type ProfilesByFilterQuery struct {
 }
 
-type ProfilesByFilterHandler = common.Handler[ProfilesByFilterQuery, interface{}]
+type ProfilesByFilterHandler = application.Handler[ProfilesByFilterQuery, interface{}]
 
 type profilesByFilterHandler struct {
+	db *sql.DB
 }
 
-func NewProfilesByFilterHandler() ProfilesByFilterHandler {
-	return &profilesByFilterHandler{}
+func NewProfilesByFilterHandler(db *sql.DB) ProfilesByFilterHandler {
+	return &profilesByFilterHandler{db}
 }
 
-func (h *profilesByFilterHandler) Handle(arg ProfilesByFilterQuery) (interface{}, error) {
+func (h *profilesByFilterHandler) Handle(ctx context.Context, arg ProfilesByFilterQuery) (interface{}, error) {
 	return nil, nil
 }

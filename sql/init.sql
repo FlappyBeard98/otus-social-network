@@ -1,40 +1,39 @@
-create database social_network;
+create database if not exists social_network;
 
-create table social_network.auth
+create table if not exists social_network.auth
 (
     user_id    bigint auto_increment
         primary key,
     login      varchar(50)  not null,
     password   varchar(100) not null,
-    last_login datetime     null
+    token      text         null,
+    constraint login
+        unique (login)
 );
 
 
-
-create table social_network.profile
+create table if not exists social_network.friends
 (
-    id         bigint auto_increment
-        primary key,
-    user_id    bigint                       null,
-    first_name varchar(100)                 null,
-    last_name  varchar(150)                 null,
-    age        int                          null,
-    gender     bit                          null,
-    city       varchar(50)                  null,
-    hobbies    text                         null,
-    constraint profile_auth_user_id_fk
-        foreign key (user_id) references social_network.auth (user_id)
-);
-
-create table social_network.friends
-(
-    left_user_id  bigint not null,
-    right_user_id bigint not null,
-    primary key (left_user_id, right_user_id),
+    user_id  bigint not null,
+    friend_user_id bigint not null,
+    primary key (user_id, friend_user_id),
     constraint friends_auth_left_user_id_fk
-        foreign key (left_user_id) references social_network.auth (user_id),
+        foreign key (user_id) references auth (user_id),
     constraint friends_auth_right_user_id_fk
-        foreign key (right_user_id) references social_network.auth (user_id)
+        foreign key (friend_user_id) references auth (user_id)
+);
+
+create table if not exists social_network.profile
+(
+    user_id    bigint       not null,
+    first_name varchar(100) not null default '',
+    last_name  varchar(150) not null default '',
+    age        int          not null default 0,
+    gender     int          not null default 0,
+    city       varchar(50)  not null default '',
+    hobbies    text         not null default '',
+    constraint profile_auth_user_id_fk
+        foreign key (user_id) references auth (user_id)
 );
 
 

@@ -1,21 +1,24 @@
 package query
 
 import (
-	"social-network/common"
+	"context"
+	"database/sql"
+	"social-network/common/application"
 )
 
 type FriendsQuery struct {
 }
 
-type FriendsHandler = common.Handler[FriendsQuery, interface{}]
+type FriendsHandler = application.Handler[FriendsQuery, interface{}]
 
 type friendsHandler struct {
+	db *sql.DB
 }
 
-func NewFriendsHandler() FriendsHandler {
-	return &friendsHandler{}
+func NewFriendsHandler(db *sql.DB) FriendsHandler {
+	return &friendsHandler{db}
 }
 
-func (h *friendsHandler) Handle(arg FriendsQuery) (interface{}, error) {
+func (h *friendsHandler) Handle(ctx context.Context, arg FriendsQuery) (interface{}, error) {
 	return nil, nil
 }

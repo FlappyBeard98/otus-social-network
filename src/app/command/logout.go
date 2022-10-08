@@ -1,19 +1,24 @@
 package command
 
-import "social-network/common"
+import (
+	"context"
+	"database/sql"
+	"social-network/common/application"
+)
 
 type LogoutCommand struct {
 }
 
-type LogoutHandler = common.Handler[LogoutCommand, interface{}]
+type LogoutHandler = application.Handler[LogoutCommand, interface{}]
 
 type logoutHandler struct {
+	db *sql.DB
 }
 
-func NewLogoutHandler() LogoutHandler {
-	return &logoutHandler{}
+func NewLogoutHandler(db *sql.DB) LogoutHandler {
+	return &logoutHandler{db}
 }
 
-func (h *logoutHandler) Handle(arg LogoutCommand) (interface{}, error) {
+func (h *logoutHandler) Handle(ctx context.Context, arg LogoutCommand) (interface{}, error) {
 	return nil, nil
 }
