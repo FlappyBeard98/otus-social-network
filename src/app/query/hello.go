@@ -18,6 +18,6 @@ func NewHelloHandler() HelloHandler {
 	return &helloHandler{}
 }
 
-func (h *helloHandler) Handle(_ context.Context, arg HelloQuery) (string, error) {
+func (receiver *helloHandler) Handle(_ context.Context, arg HelloQuery) (string, error) {
 	return "hello " + arg.Name, nil
 }

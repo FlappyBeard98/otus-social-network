@@ -9,8 +9,8 @@ func (receiver *RemoveFriendQuery) Sql() string {
 	return `
 DELETE FROM social_network.friends
 WHERE
-    user_id = $1
-    AND friend_user_id = $2
+    user_id = ?
+    AND friend_user_id = ?
 ;
 `
 }

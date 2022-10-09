@@ -1,21 +1,21 @@
 package db
 
 type GetFriendsPageByUserIdQuery struct {
-	Limit  int32
-	Offset int32
 	UserId int64
+	Limit  int64
+	Offset int64
 }
 
 func (receiver *GetFriendsPageByUserIdQuery) Sql() string {
 	return `
 ;WITH friends_page AS (
     SELECT
-        right_user_id AS user_id
+        friend_user_id AS user_id
     FROM social_network.friends
     WHERE 
-        left_user_id = $3
-    LIMIT $1
-    OFFSET $2
+        user_id = ?
+    LIMIT ?
+    OFFSET ?
 )
 SELECT
      user_id

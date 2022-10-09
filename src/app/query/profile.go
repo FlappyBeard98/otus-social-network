@@ -19,6 +19,6 @@ func NewProfileHandler(db *sql.DB) ProfileHandler {
 	return &profileHandler{db}
 }
 
-func (h *profileHandler) Handle(ctx context.Context, arg ProfileQuery) (interface{}, error) {
+func (receiver *profileHandler) Handle(ctx context.Context, arg ProfileQuery) (interface{}, error) {
 	return nil, nil
 }

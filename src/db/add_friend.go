@@ -8,7 +8,7 @@ type AddFriendQuery struct {
 func (receiver *AddFriendQuery) Sql() string {
 	return `
 INSERT INTO social_network.friends(user_id, friend_user_id)
-VALUES ($1, $2)
+VALUES (?, ?)
 ;
 `
 }

@@ -1,16 +1,16 @@
 package db
 
-type UpdatePasswordQuery struct {
-	UserId   int64
+type SavePasswordQuery struct {
 	Password string
+	UserId   int64
 }
 
-func (receiver *UpdatePasswordQuery) Sql() string {
+func (receiver *SavePasswordQuery) Sql() string {
 	return `
 UPDATE social_network.auth SET
-    password = $2
+    password = ?
 WHERE
-    user_id = $1
+    user_id = ?
 ;
 `
 }

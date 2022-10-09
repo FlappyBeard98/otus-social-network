@@ -19,6 +19,6 @@ func NewLoginHandler(db *sql.DB) LoginHandler {
 	return &loginHandler{db}
 }
 
-func (h *loginHandler) Handle(ctx context.Context, arg LoginCommand) (interface{}, error) {
+func (receiver *loginHandler) Handle(ctx context.Context, arg LoginCommand) (interface{}, error) {
 	return nil, nil
 }

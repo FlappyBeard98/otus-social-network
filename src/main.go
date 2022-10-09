@@ -17,10 +17,10 @@ func main() {
 	var cfg Config
 	cfg.Load(configFileName)
 
-	db := database.InitMysql(cfg.Database.ConnectionString)
-	defer func() { _ = db.Close() }()
+	dbase := database.InitMysql(cfg.Database.ConnectionString)
+	defer func() { _ = dbase.Close() }()
 
-	a := app.NewApp(db)
+	a := app.NewApp(dbase)
 	e := echo.New()
 
 	api.SetupRoutes(e, a)

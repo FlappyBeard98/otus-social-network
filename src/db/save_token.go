@@ -1,16 +1,16 @@
 package db
 
 type SaveTokenQuery struct {
+	Token  *string
 	UserId int64
-	Token  string
 }
 
 func (receiver *SaveTokenQuery) Sql() string {
 	return `
 UPDATE social_network.auth SET
-    token = $2
+    token = ?
 WHERE
-    user_id = $1
+    user_id = ?
 ;
 `
 }

@@ -19,6 +19,6 @@ func NewProfilesByFilterHandler(db *sql.DB) ProfilesByFilterHandler {
 	return &profilesByFilterHandler{db}
 }
 
-func (h *profilesByFilterHandler) Handle(ctx context.Context, arg ProfilesByFilterQuery) (interface{}, error) {
+func (receiver *profilesByFilterHandler) Handle(ctx context.Context, arg ProfilesByFilterQuery) (interface{}, error) {
 	return nil, nil
 }

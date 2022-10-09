@@ -19,6 +19,6 @@ func NewFriendsHandler(db *sql.DB) FriendsHandler {
 	return &friendsHandler{db}
 }
 
-func (h *friendsHandler) Handle(ctx context.Context, arg FriendsQuery) (interface{}, error) {
+func (receiver *friendsHandler) Handle(ctx context.Context, arg FriendsQuery) (interface{}, error) {
 	return nil, nil
 }

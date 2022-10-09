@@ -1,12 +1,12 @@
 package db
 
-type FindProfileByUserIdQuery struct {
+type GetProfileByUserIdQuery struct {
 	UserId int64
 }
 
-func (receiver *FindProfileByUserIdQuery) Sql() string {
+func (receiver *GetProfileByUserIdQuery) Sql() string {
 	return `
-SELECT 
+SELECT
 	 user_id
     ,first_name
     ,last_name
@@ -15,8 +15,8 @@ SELECT
     ,city
     ,hobbies
 FROM social_network.profile
-WHERE 
-	user_id = $1
+WHERE
+	user_id = ?
 ;
 `
 }

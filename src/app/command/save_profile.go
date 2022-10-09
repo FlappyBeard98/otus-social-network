@@ -19,6 +19,6 @@ func NewSaveProfileHandler(db *sql.DB) SaveProfileHandler {
 	return &saveProfileHandler{db}
 }
 
-func (h *saveProfileHandler) Handle(ctx context.Context, arg SaveProfileCommand) (interface{}, error) {
+func (receiver *saveProfileHandler) Handle(ctx context.Context, arg SaveProfileCommand) (interface{}, error) {
 	return nil, nil
 }

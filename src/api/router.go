@@ -9,11 +9,11 @@ import (
 )
 
 func SetupRoutes(echo *echo.Echo, app *app.App) {
-	test := echo.Group("test")
+	test := echo.Group("hello")
 	test.GET("/:name", wrap(app.Queries.Hello))
 
 	echo.POST("/register", wrap(app.Commands.Register))
-	echo.POST("/login", wrap(app.Commands.Register))
+	echo.POST("/login", wrap(app.Commands.Login))
 	echo.GET("/profiles", wrap(app.Queries.ProfilesByFilter))
 
 	authed := echo.Group("public", middleware.BasicAuth(auth))

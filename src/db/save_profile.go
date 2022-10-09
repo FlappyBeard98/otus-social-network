@@ -1,5 +1,7 @@
 package db
 
+import "social-network/common"
+
 type SaveProfileQuery struct {
 	UserId    int64
 	FirstName string
@@ -13,14 +15,19 @@ type SaveProfileQuery struct {
 func (receiver *SaveProfileQuery) Sql() string {
 	return `
 INSERT INTO social_network.profile(user_id, first_name, last_name, age, gender, city, hobbies)
-VALUES ($1, $2, $3, $4, $5, $6, $7)
+VALUES (?, ?, ?, ?, ?, ?, ?)
 ON DUPLICATE KEY UPDATE 
-     first_name = $2
-    ,last_name = $3
-    ,age = $4
-    ,gender = $5
-    ,city = $6
-    ,hobbies = $7
+     first_name = ?
+    ,last_name = ?
+    ,age = ?
+    ,gender = ?
+    ,city = ?
+    ,hobbies = ?
 ;
 `
+}
+
+func (receiver *SaveProfileQuery) GetParams() []any {
+	params := common.GetFieldsValuesAsSlice(receiver)
+	return append(params,params[1:]...)
 }

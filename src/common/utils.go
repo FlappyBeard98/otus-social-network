@@ -6,8 +6,13 @@ func GetFieldsValuesAsSlice(obj interface{}) (values []interface{}) {
 	reflected := reflect.ValueOf(obj)
 
 	if reflected.Kind() != reflect.Struct {
+		reflected = reflect.ValueOf(obj).Elem()
+	}
+
+	if reflected.Kind() != reflect.Struct {
 		return
 	}
+
 	l := reflected.NumField()
 
 	for i := 0; i < l; i++ {

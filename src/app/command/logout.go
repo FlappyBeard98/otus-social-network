@@ -19,6 +19,6 @@ func NewLogoutHandler(db *sql.DB) LogoutHandler {
 	return &logoutHandler{db}
 }
 
-func (h *logoutHandler) Handle(ctx context.Context, arg LogoutCommand) (interface{}, error) {
+func (receiver *logoutHandler) Handle(ctx context.Context, arg LogoutCommand) (interface{}, error) {
 	return nil, nil
 }

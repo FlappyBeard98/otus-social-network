@@ -19,6 +19,6 @@ func NewAddFriendHandler(db *sql.DB) AddFriendHandler {
 	return &addFriendHandler{db}
 }
 
-func (h *addFriendHandler) Handle(ctx context.Context, arg AddFriendCommand) (interface{}, error) {
+func (receiver *addFriendHandler) Handle(ctx context.Context, arg AddFriendCommand) (interface{}, error) {
 	return nil, nil
 }

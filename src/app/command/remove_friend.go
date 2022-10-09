@@ -19,6 +19,6 @@ func NewRemoveFriendHandler(db *sql.DB) RemoveFriendHandler {
 	return &removeFriendHandler{db}
 }
 
-func (h *removeFriendHandler) Handle(ctx context.Context, arg RemoveFriendCommand) (interface{}, error) {
+func (receiver *removeFriendHandler) Handle(ctx context.Context, arg RemoveFriendCommand) (interface{}, error) {
 	return nil, nil
 }
