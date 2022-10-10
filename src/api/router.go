@@ -13,7 +13,6 @@ func SetupRoutes(echo *echo.Echo, app *app.App) {
 	test.GET("/:name", wrap(app.Queries.Hello))
 
 	echo.POST("/register", wrap(app.Commands.Register))
-	echo.POST("/login", wrap(app.Commands.Login))
 	echo.GET("/profiles", wrap(app.Queries.ProfilesByFilter))
 
 	authed := echo.Group("public", middleware.BasicAuth(auth))
@@ -22,7 +21,6 @@ func SetupRoutes(echo *echo.Echo, app *app.App) {
 	authed.GET("/profile/:id/friends", wrap(app.Queries.Friends))
 	authed.POST("/profile/:id/friends", wrap(app.Commands.AddFriend))
 	authed.DELETE("/profile/:id/friends", wrap(app.Commands.RemoveFriend))
-	authed.POST("/logout", wrap(app.Commands.Logout))
 }
 
 func wrap[In any, Out any](handler application.Handler[In, Out]) echo.HandlerFunc {
@@ -44,6 +42,6 @@ func wrap[In any, Out any](handler application.Handler[In, Out]) echo.HandlerFun
 }
 
 func auth(login string, password string, context echo.Context) (bool, error) {
-	//todo setup basic auth
+	//TODO setup basic auth
 	return true, nil
 }

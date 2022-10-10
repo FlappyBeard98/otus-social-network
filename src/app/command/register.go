@@ -45,6 +45,7 @@ func (receiver *registerHandler) Handle(ctx context.Context, arg RegisterCommand
 
 	r := db.NewRepository(tx)
 
+	//TODO encrypt password
 	_,err = r.AddAuth.Handle(ctx,&db.AddAuthQuery{
 		Login:    arg.Login,
 		Password: arg.Password,
