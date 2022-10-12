@@ -14,7 +14,7 @@ type commands struct {
 }
 
 type queries struct {
-	Hello            query.HelloHandler //TODO remove
+	IsValidAuth      query.IsValidAuthHandler
 	ProfilesByFilter query.ProfilesByFilterHandler
 	Profile          query.ProfileHandler
 	Friends          query.FriendsHandler
@@ -25,16 +25,16 @@ type App struct {
 	Queries  queries
 }
 
-func NewApp(db *sql.DB) *App {
+func NewApp(db *sql.DB,key string) *App {
 	return &App{
 		Commands: commands{
-			Register:     command.NewRegisterHandler(db),
+			Register:     command.NewRegisterHandler(db,key),
 			SaveProfile:  command.NewSaveProfileHandler(db),
 			AddFriend:    command.NewAddFriendHandler(db),
 			RemoveFriend: command.NewRemoveFriendHandler(db),
 		},
 		Queries: queries{
-			Hello:            query.NewHelloHandler(),
+			IsValidAuth:      query.NewIsValidAuthHandler(db,key),
 			ProfilesByFilter: query.NewProfilesByFilterHandler(db),
 			Profile:          query.NewProfileHandler(db),
 			Friends:          query.NewFriendsHandler(db),

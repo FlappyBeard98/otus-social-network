@@ -10,7 +10,6 @@ SELECT
      user_id
     ,login
     ,password
-    ,token
 FROM social_network.auth
 WHERE
     login = ?

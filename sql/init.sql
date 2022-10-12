@@ -4,9 +4,8 @@ create table if not exists social_network.auth
 (
     user_id    bigint auto_increment
         primary key,
-    login      varchar(50)  not null,
-    password   varchar(100) not null,
-    token      text         null,
+    login      nvarchar(50)  not null,
+    password   nvarchar(100) not null,
     constraint login
         unique (login)
 );
@@ -18,22 +17,22 @@ create table if not exists social_network.friends
     friend_user_id bigint not null,
     primary key (user_id, friend_user_id),
     constraint friends_auth_left_user_id_fk
-        foreign key (user_id) references auth (user_id),
+    foreign key (user_id) references auth (user_id),
     constraint friends_auth_right_user_id_fk
-        foreign key (friend_user_id) references auth (user_id)
-);
+    foreign key (friend_user_id) references auth (user_id)
+    );
 
 create table if not exists social_network.profile
 (
-    user_id    bigint       not null,
-    first_name varchar(100) not null default '',
-    last_name  varchar(150) not null default '',
-    age        int          not null default 0,
-    gender     int          not null default 0,
-    city       varchar(50)  not null default '',
-    hobbies    text         not null default '',
-    constraint profile_auth_user_id_fk
-        foreign key (user_id) references auth (user_id)
+user_id    bigint       not null,
+first_name varchar(100) not null default '',
+last_name  varchar(150) not null default '',
+age        int          not null default 0,
+gender     int          not null default 0,
+city       varchar(50)  not null default '',
+hobbies    text         not null,
+constraint profile_auth_user_id_fk
+foreign key (user_id) references auth (user_id)
 );
 
 

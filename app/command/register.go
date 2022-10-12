@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"database/sql"
+	"social-network/common"
 	"social-network/common/application"
 	"social-network/common/database"
 	"social-network/db"
@@ -27,10 +28,11 @@ type RegisterHandler = application.Handler[RegisterCommand, *RegisterCommandResu
 
 type registerHandler struct {
 	db *sql.DB
+	key string
 }
 
-func NewRegisterHandler(db *sql.DB) RegisterHandler {
-	return &registerHandler{db}
+func NewRegisterHandler(db *sql.DB,key string) RegisterHandler {
+	return &registerHandler{db,key}
 }
 
 func (receiver *registerHandler) Handle(ctx context.Context, arg RegisterCommand) (*RegisterCommandResult, error) {
@@ -45,10 +47,12 @@ func (receiver *registerHandler) Handle(ctx context.Context, arg RegisterCommand
 
 	r := db.NewRepository(tx)
 
-	//TODO encrypt password
+
+	password, err := common.Encrypt([]byte(receiver.key),[]byte(arg.Password))
+
 	_,err = r.AddAuth.Handle(ctx,&db.AddAuthQuery{
 		Login:    arg.Login,
-		Password: arg.Password,
+		Password: password,
 	})
 
 	if err != nil {

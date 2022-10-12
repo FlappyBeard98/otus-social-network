@@ -14,7 +14,6 @@ type Auth struct {
 	UserId    int64     `db:"user_id"`
 	Login     string    `db:"login"`
 	Password  string    `db:"password"`
-	Token *string `db:"token"`
 }
 
 type Friend struct {

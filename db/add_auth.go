@@ -2,7 +2,7 @@ package db
 
 type AddAuthQuery struct {
 	Login    string
-	Password string
+	Password []byte
 }
 
 func (receiver *AddAuthQuery) Sql() string {
