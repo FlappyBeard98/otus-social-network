@@ -17,6 +17,24 @@ type SqlParametersProvider interface {
 	GetParams() []any
 }
 
+func Like(str *string,pre bool, post bool) *string{
+
+	if str == nil {
+		return nil
+	}
+	s := *str
+
+	if pre {
+		s = "%" + s
+	}
+
+	if post  {
+		s = s + "%"
+	}
+
+	return &s
+}
+
 func InitMysql(databaseConnection string) *sql.DB {
 	db, err := sql.Open("mysql", databaseConnection)
 	if err != nil {
@@ -28,14 +46,6 @@ func InitMysql(databaseConnection string) *sql.DB {
 	}
 
 	return db
-}
-
-func NilOrExprMysql(obj any,expr string) string{
-	if obj == nil {
-		return "true"
-	} else {
-		return expr
-	}
 }
 
 func FixTx(tx *sql.Tx,err *error)  {

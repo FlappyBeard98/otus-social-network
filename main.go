@@ -13,6 +13,7 @@ import (
 
 func main() {
 
+
 	cfg := loadConfig("config.json")
 
 

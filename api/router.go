@@ -18,8 +18,8 @@ func SetupRoutes(echo *echo.Echo, app *app.App) {
 	authed.GET("/:userId", wrap(app.Queries.Profile))
 	authed.POST("/:userId", wrap(app.Commands.SaveProfile))
 	authed.GET("/:userId/friends", wrap(app.Queries.Friends))
-	authed.POST("/:userId/friends", wrap(app.Commands.AddFriend))
-	authed.DELETE("/:userId/friends", wrap(app.Commands.RemoveFriend))
+	authed.POST("/:userId/friends/:friendUserId", wrap(app.Commands.AddFriend))
+	authed.DELETE("/:userId/friends/:friendUserId", wrap(app.Commands.RemoveFriend))
 }
 
 func wrap[In any, Out any](handler application.Handler[In, Out]) echo.HandlerFunc {
@@ -36,7 +36,12 @@ func wrap[In any, Out any](handler application.Handler[In, Out]) echo.HandlerFun
 			return c.String(http.StatusInternalServerError, err.Error())
 		}
 
-		return c.JSON(http.StatusOK, result)
+		if any(result) == nil {
+			return c.NoContent(http.StatusOK)
+		} else {
+			return c.JSON(http.StatusOK, result)
+		}
+
 	}
 }
 

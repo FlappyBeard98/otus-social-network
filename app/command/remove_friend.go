@@ -9,7 +9,7 @@ import (
 
 type RemoveFriendCommand struct {
 	UserId int64 `param:"userId"`
-	FriendUserId int64 `json:"userId"`
+	FriendUserId int64 `param:"friendUserId"`
 }
 
 type RemoveFriendHandler = application.Handler[RemoveFriendCommand, interface{}]

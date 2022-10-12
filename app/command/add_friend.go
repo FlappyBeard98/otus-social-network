@@ -9,7 +9,7 @@ import (
 
 type AddFriendCommand struct {
 	UserId int64 `param:"userId"`
-	FriendUserId int64 `json:"userId"`
+	FriendUserId int64 `param:"friendUserId"`
 }
 
 type AddFriendHandler = application.Handler[AddFriendCommand, interface{}]
@@ -27,7 +27,7 @@ func (receiver *addFriendHandler) Handle(ctx context.Context, arg AddFriendComma
 
 	r := db.NewRepository(receiver.db)
 
-	_,err := r.RemoveFriend.Handle(ctx,&db.RemoveFriendQuery{
+	_,err := r.AddFriend.Handle(ctx,&db.AddFriendQuery{
 		UserId:       arg.UserId,
 		FriendUserId: arg.FriendUserId,
 		})

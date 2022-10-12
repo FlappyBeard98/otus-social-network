@@ -35,7 +35,7 @@ func GetFieldsValuesAsSlice(obj interface{}) (values []interface{}) {
 
 func Map[In any,Out any](in []In,maper func(In)Out) []Out {
 
-	result := make([]Out,len(in))
+	result := make([]Out,0)
 	for _,item := range in {
 		result = append(result, maper(item))
 	}

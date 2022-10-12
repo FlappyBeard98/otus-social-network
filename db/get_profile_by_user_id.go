@@ -14,7 +14,7 @@ SELECT
     ,gender
     ,city
     ,hobbies
-FROM social_network.profile
+FROM social_network.profiles
 WHERE
 	user_id = ?
 ;

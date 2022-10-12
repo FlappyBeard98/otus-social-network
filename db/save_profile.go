@@ -14,7 +14,7 @@ type SaveProfileQuery struct {
 
 func (receiver *SaveProfileQuery) Sql() string {
 	return `
-INSERT INTO social_network.profile(user_id, first_name, last_name, age, gender, city, hobbies)
+INSERT INTO social_network.profiles(user_id, first_name, last_name, age, gender, city, hobbies)
 VALUES (?, ?, ?, ?, ?, ?, ?)
 ON DUPLICATE KEY UPDATE 
      first_name = ?

@@ -26,6 +26,7 @@ func NewIsValidAuthHandler(db *sql.DB,key string) IsValidAuthHandler {
 
 func (receiver *isValidAuthQueryHandler) Handle(ctx context.Context, arg IsValidAuthQuery) (bool, error) {
 
+
 	r := db.NewRepository(receiver.db)
 
 	auth, err := r.GetAuthByLogin.Handle(ctx,&db.GetAuthByLoginQuery{Login: arg.Login})

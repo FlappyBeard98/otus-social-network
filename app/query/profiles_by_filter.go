@@ -22,7 +22,7 @@ type ProfilesByFilterQuery struct {
 
 type ProfilesByFilterQueryResult struct {
 	model.PageInfo
-	Items []model.Profile
+	Items []model.Profile `json:"items"`
 }
 
 type ProfilesByFilterHandler = application.Handler[ProfilesByFilterQuery, *ProfilesByFilterQueryResult]

@@ -1,0 +1,523 @@
+{
+	"info": {
+		"_postman_id": "14a0f355-77ec-455b-8d58-0cd6aba89e9d",
+		"name": "otus-social-network",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2484151"
+	},
+	"item": [
+		{
+			"name": "Register first user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var uuid = require('uuid');",
+							"pm.environment.set('login','test_login_'+ uuid.v4());",
+							"pm.environment.set('password','test_password_'+ uuid.v4());",
+							"var body = {",
+							"    firstName: 'test_firstName_'+ uuid.v4(),",
+							"    lastName: 'test_lastName_'+ uuid.v4(),",
+							"    age: 20,",
+							"    gender: 1,",
+							"    city: 'Moscow',",
+							"    hobbies: 'none',",
+							"    login:  pm.environment.get('login'),",
+							"    password: pm.environment.get('password')",
+							"};",
+							"pm.environment.set('register_request_body', JSON.stringify(body)); ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('userId',pm.response.json().userId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{register_request_body}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/register",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('profile',pm.response.json());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{login}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:1323/profile/{{userId}}",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"profile",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save profile",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var body = pm.environment.get('profile');",
+							"body.lastName = 'changed last name'",
+							"pm.environment.set('register_request_body', JSON.stringify(body)); "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{login}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{register_request_body}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/profile/{{userId}}",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"profile",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register second user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var uuid = require('uuid');",
+							"var login = 'test_login_'+ uuid.v4();",
+							"var password = 'test_password_'+ uuid.v4();",
+							"pm.environment.set('second_user_lastName','test_second_lastName_'+ uuid.v4());",
+							"var body = {",
+							"    firstName: 'test_second_firstName_'+ uuid.v4(),",
+							"    lastName: pm.environment.get('second_user_lastName'),",
+							"    age: 20,",
+							"    gender: 1,",
+							"    city: 'Moscow',",
+							"    hobbies: 'none',",
+							"    login:  login,",
+							"    password: password",
+							"};",
+							"pm.environment.set('register_request_body', JSON.stringify(body)); ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('userId',pm.response.json().userId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{register_request_body}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/register",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find second user by last name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('friend_user_id',pm.response.json().items[0].userId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{login}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:1323/profiles?lastName={{second_user_lastName}}&offset=0&limit=100",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"profiles"
+					],
+					"query": [
+						{
+							"key": "lastName",
+							"value": "{{second_user_lastName}}"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add second user as friend of first user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var body = pm.environment.get('profile');",
+							"body.lastName = 'changed last name'",
+							"pm.environment.set('register_request_body', JSON.stringify(body)); "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{login}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:1323/profile/{{userId}}/friends/{{friend_user_id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"profile",
+						"{{userId}}",
+						"friends",
+						"{{friend_user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get first user friends",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{login}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:1323/profile/{{userId}}/friends?offset=0&limit=100",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"profile",
+						"{{userId}}",
+						"friends"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove second user from friends of first user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var body = pm.environment.get('profile');",
+							"body.lastName = 'changed last name'",
+							"pm.environment.set('register_request_body', JSON.stringify(body)); "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{login}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:1323/profile/{{userId}}/friends/{{friend_user_id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"profile",
+						"{{userId}}",
+						"friends",
+						"{{friend_user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get first user empty friends list",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"    pm.expect(pm.response.json().total).eq(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{login}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:1323/profile/{{userId}}/friends?offset=0&limit=100",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"profile",
+						"{{userId}}",
+						"friends"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
