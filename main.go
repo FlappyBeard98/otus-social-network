@@ -10,15 +10,25 @@ import (
 	"social-network/common/http"
 )
 
+const (
+	config = "config.json"
+	migration = "sql/init.sql"
+)
 
 func main() {
 
 
-	cfg := loadConfig("config.json")
+	cfg := loadConfig(config)
 
 
 	dbase := database.InitMysql(cfg.Database.ConnectionString)
 	defer func() { _ = dbase.Close() }()
+
+	err := database.Migrate(dbase,migration)
+
+	if err!= nil {
+		panic(err)
+	}
 
 	a := app.NewApp(dbase,cfg.AesKey)
 	e := echo.New()

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/georgysavva/scany/v2/sqlscan"
 	_ "github.com/go-sql-driver/mysql"
+	"os"
 	"social-network/common"
 	"social-network/common/application"
 )
@@ -45,7 +46,29 @@ func InitMysql(databaseConnection string) *sql.DB {
 		panic(err.Error())
 	}
 
+	
+
 	return db
+}
+
+func Migrate(db *sql.DB,migrationFile string)error{
+	bytes, err := os.ReadFile(migrationFile)
+	sqlStmt := string(bytes)
+	if err!=nil {
+		return err
+	}
+
+	tx, err := db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	defer FixTx(tx,&err)
+
+	_, err = tx.Exec(sqlStmt)
+
+	return err
 }
 
 func FixTx(tx *sql.Tx,err *error)  {

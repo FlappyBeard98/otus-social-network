@@ -2,12 +2,12 @@ create database if not exists social_network;
 
 create table if not exists social_network.auth
 (
-    user_id    bigint auto_increment
-        primary key,
-    login      nvarchar(250)  not null,
-    password   varbinary(1000) not null,
-    constraint login
-        unique (login)
+user_id    bigint auto_increment
+primary key,
+login      nvarchar(250)  not null,
+password   varbinary(1000) not null,
+constraint login
+unique (login)
 );
 
 
@@ -25,7 +25,7 @@ foreign key (friend_user_id) references auth (user_id)
 create table if not exists social_network.profiles
 (
 user_id    bigint       not null
-    primary key,
+primary key,
 first_name varchar(100) not null default '',
 last_name  varchar(150) not null default '',
 age        int          not null default 0,
@@ -35,5 +35,4 @@ hobbies    text         not null,
 constraint profile_auth_user_id_fk
 foreign key (user_id) references auth (user_id)
 );
-
 

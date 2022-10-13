@@ -6,14 +6,16 @@ CGO_ENABLED=0 \
 GOOS=linux \
 GOARCH=amd64
 
-WORKDIR /root/go/src/api
+WORKDIR /app
 
 COPY . .
 
 RUN go get -d -v ./...
 RUN go install -v ./...
+RUN go build
 
 # Export necessary port
 EXPOSE 1323
 
-CMD ["main"]
+
+CMD  ["./social-network"]
