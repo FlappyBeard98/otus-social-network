@@ -7,22 +7,17 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
     ports:
-      - 3306:3306
-      - 33060:33060
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+      - '3306:3306'
+      - '33060:33060'
   app:
     build:
       dockerfile: Dockerfile
       context: .
     environment:
-      CONNECTION_STRING: "root:example@tcp(db:3306)/?multiStatements=true"
+      CONNECTION_STRING: 'root:example@tcp(db:3306)/?multiStatements=true&timeout=5s'
       API_PORT: 1323
     ports:
-      - "1323:1323"
+      - '1323:1323'
     depends_on:
       - db
+

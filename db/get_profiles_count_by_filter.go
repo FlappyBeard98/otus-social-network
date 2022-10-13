@@ -31,21 +31,19 @@ AND (? IS NULL OR hobbies LIKE ?)
 }
 
 func (receiver *GetProfilesCountByFilterQuery) GetParams() []any {
-	params := make([]any,0)
-	params = append(params,receiver.FirstName )
-	params = append(params,database.Like(receiver.FirstName,false,true))
-	params = append(params,receiver.LastName )
-	params = append(params,database.Like(receiver.LastName,false,true))
-	params = append(params,receiver.Age )
-	params = append(params,receiver.Age )
-	params = append(params,receiver.Gender )
-	params = append(params,receiver.Gender )
-	params = append(params,receiver.City )
-	params = append(params,receiver.City )
-	params = append(params,receiver.Hobbies )
-	params = append(params,database.Like(receiver.Hobbies,true,true) )
+	params := make([]any, 0)
+	params = append(params, receiver.FirstName)
+	params = append(params, database.Like(receiver.FirstName, false, true))
+	params = append(params, receiver.LastName)
+	params = append(params, database.Like(receiver.LastName, false, true))
+	params = append(params, receiver.Age)
+	params = append(params, receiver.Age)
+	params = append(params, receiver.Gender)
+	params = append(params, receiver.Gender)
+	params = append(params, receiver.City)
+	params = append(params, receiver.City)
+	params = append(params, receiver.Hobbies)
+	params = append(params, database.Like(receiver.Hobbies, true, true))
 
 	return params
 }
-
-

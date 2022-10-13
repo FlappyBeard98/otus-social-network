@@ -9,6 +9,7 @@ import (
 	"social-network/common/application"
 )
 
+// SetupRoutes bind api routes to handlers
 func SetupRoutes(echo *echo.Echo, app *app.App) {
 
 	echo.POST("/register", wrap(app.Commands.Register))
@@ -22,6 +23,7 @@ func SetupRoutes(echo *echo.Echo, app *app.App) {
 	authed.DELETE("/:userId/friends/:friendUserId", wrap(app.Commands.RemoveFriend))
 }
 
+// wrap application.Handler into echo.HandlerFunc for generic http request processing
 func wrap[In any, Out any](handler application.Handler[In, Out]) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
@@ -45,9 +47,10 @@ func wrap[In any, Out any](handler application.Handler[In, Out]) echo.HandlerFun
 	}
 }
 
-func newBasicAuth( app *app.App) func (string,string,echo.Context) (bool, error) {
-	return func (login string, password string, context echo.Context) (bool, error) {
-		ok, err := app.Queries.IsValidAuth.Handle(context.Request().Context(),query.IsValidAuthQuery{
+// newBasicAuth creates basic auth handler
+func newBasicAuth(app *app.App) func(string, string, echo.Context) (bool, error) {
+	return func(login string, password string, context echo.Context) (bool, error) {
+		ok, err := app.Queries.IsValidAuth.Handle(context.Request().Context(), query.IsValidAuthQuery{
 			Login:    login,
 			Password: password,
 		})

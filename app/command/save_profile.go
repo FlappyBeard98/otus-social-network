@@ -8,11 +8,11 @@ import (
 )
 
 type SaveProfileCommand struct {
-	UserId int64 `param:"userId"`
+	UserId    int64  `param:"userId"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Age       int32  `json:"age"`
-	Gender    int32   `json:"gender"`
+	Gender    int32  `json:"gender"`
 	City      string `json:"city"`
 	Hobbies   string `json:"hobbies"`
 }
@@ -31,7 +31,7 @@ func (receiver *saveProfileHandler) Handle(ctx context.Context, arg SaveProfileC
 
 	r := db.NewRepository(receiver.db)
 
-	_,err := r.SaveProfile.Handle(ctx,&db.SaveProfileQuery{
+	_, err := r.SaveProfile.Handle(ctx, &db.SaveProfileQuery{
 		UserId:    arg.UserId,
 		FirstName: arg.FirstName,
 		LastName:  arg.LastName,
@@ -44,7 +44,6 @@ func (receiver *saveProfileHandler) Handle(ctx context.Context, arg SaveProfileC
 	if err != nil {
 		return nil, err
 	}
-
 
 	return nil, nil
 }

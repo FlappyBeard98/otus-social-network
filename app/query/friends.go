@@ -11,7 +11,7 @@ import (
 
 type FriendsQuery struct {
 	UserId int64 `param:"userId"`
-	Limit int64  `query:"limit"`
+	Limit  int64 `query:"limit"`
 	Offset int64 `query:"offset"`
 }
 
@@ -34,30 +34,29 @@ func (receiver *friendsHandler) Handle(ctx context.Context, arg FriendsQuery) (*
 
 	r := db.NewRepository(receiver.db)
 
-	count,err := r.GetFriendsCountByUserId.Handle(ctx,&db.GetFriendsCountByUserIdQuery{UserId: arg.UserId})
+	count, err := r.GetFriendsCountByUserId.Handle(ctx, &db.GetFriendsCountByUserIdQuery{UserId: arg.UserId})
 
-	if err!=nil {
+	if err != nil {
 		return nil, err
 	}
 
-	profiles,err := r.GetFriendsPageByUserId.Handle(ctx,&db.GetFriendsPageByUserIdQuery{
+	profiles, err := r.GetFriendsPageByUserId.Handle(ctx, &db.GetFriendsPageByUserIdQuery{
 		UserId: arg.UserId,
 		Limit:  arg.Limit,
 		Offset: arg.Offset,
-		})
+	})
 
-	if err!=nil {
+	if err != nil {
 		return nil, err
 	}
-
 
 	return &FriendsQueryResult{
 		PageInfo: model.PageInfo{
 			From:  int(arg.Offset),
 			Count: len(profiles),
 			Total: int(count[0]),
-			},
-			Items:    common.Map[db.Profile,model.Profile](profiles, model.NewProfileFromDb),
-			},nil
+		},
+		Items: common.Map[db.Profile, model.Profile](profiles, model.NewProfileFromDb),
+	}, nil
 
 }

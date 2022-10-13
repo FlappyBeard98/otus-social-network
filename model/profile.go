@@ -2,17 +2,19 @@ package model
 
 import "social-network/db"
 
+// Profile user profile data
 type Profile struct {
-	UserId    int64 `json:"userId"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Age       int32  `json:"age"`
-	Gender    int32   `json:"gender"`
-	City      string `json:"city"`
-	Hobbies   string `json:"hobbies"`
+	UserId    int64  `json:"userId"`    //user identifier
+	FirstName string `json:"firstName"` //user first name
+	LastName  string `json:"lastName"`  //user last name
+	Age       int32  `json:"age"`       //user age
+	Gender    int32  `json:"gender"`    //user gender
+	City      string `json:"city"`      //user city
+	Hobbies   string `json:"hobbies"`   //user hobbies
 }
 
-func NewProfileFromDb(profile db.Profile) Profile  {
+// NewProfileFromDb creates Profile from db.Profile
+func NewProfileFromDb(profile db.Profile) Profile {
 
 	return Profile{
 		UserId:    profile.UserId,
@@ -22,11 +24,12 @@ func NewProfileFromDb(profile db.Profile) Profile  {
 		Gender:    profile.Gender,
 		City:      profile.City,
 		Hobbies:   profile.Hobbies,
-		}
+	}
 }
 
+// PageInfo represents requested page metadata
 type PageInfo struct {
-	From int `json:"from"`
-	Count int `json:"count"`
-	Total int `json:"total"`
+	From  int `json:"from"`  //page start position
+	Count int `json:"count"` //number of items per page
+	Total int `json:"total"` //total elements
 }

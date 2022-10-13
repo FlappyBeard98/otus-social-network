@@ -10,6 +10,7 @@ import (
 	"reflect"
 )
 
+// GetFieldsValuesAsSlice returns the fields of the structure as an slice
 func GetFieldsValuesAsSlice(obj interface{}) (values []interface{}) {
 	reflected := reflect.ValueOf(obj)
 
@@ -33,16 +34,18 @@ func GetFieldsValuesAsSlice(obj interface{}) (values []interface{}) {
 	return
 }
 
-func Map[In any,Out any](in []In,maper func(In)Out) []Out {
+// Map applies a function to all elements of an slice and returns a new slice with the result of the application
+func Map[In any, Out any](in []In, maperFn func(In) Out) []Out {
 
-	result := make([]Out,0)
-	for _,item := range in {
-		result = append(result, maper(item))
+	result := make([]Out, 0)
+	for _, item := range in {
+		result = append(result, maperFn(item))
 	}
 	return result
 }
 
-func Encrypt(key, text []byte) ([]byte, error) {
+// Encrypt text with a key
+func Encrypt(key []byte, text []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -58,7 +61,8 @@ func Encrypt(key, text []byte) ([]byte, error) {
 	return ciphertext, nil
 }
 
-func Decrypt(key, text []byte) ([]byte, error) {
+// Decrypt text with a key
+func Decrypt(key []byte, text []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err

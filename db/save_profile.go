@@ -29,5 +29,5 @@ ON DUPLICATE KEY UPDATE
 
 func (receiver *SaveProfileQuery) GetParams() []any {
 	params := common.GetFieldsValuesAsSlice(receiver)
-	return append(params,params[1:]...)
+	return append(params, params[1:]...)
 }

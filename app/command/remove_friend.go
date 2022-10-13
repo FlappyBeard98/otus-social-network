@@ -8,7 +8,7 @@ import (
 )
 
 type RemoveFriendCommand struct {
-	UserId int64 `param:"userId"`
+	UserId       int64 `param:"userId"`
 	FriendUserId int64 `param:"friendUserId"`
 }
 
@@ -24,15 +24,14 @@ func NewRemoveFriendHandler(db *sql.DB) RemoveFriendHandler {
 
 func (receiver *removeFriendHandler) Handle(ctx context.Context, arg RemoveFriendCommand) (interface{}, error) {
 
-
 	r := db.NewRepository(receiver.db)
 
-	_,err := r.RemoveFriend.Handle(ctx,&db.RemoveFriendQuery{
+	_, err := r.RemoveFriend.Handle(ctx, &db.RemoveFriendQuery{
 		UserId:       arg.UserId,
 		FriendUserId: arg.FriendUserId,
 	})
 
-	if err!=nil {
+	if err != nil {
 		return nil, err
 	}
 

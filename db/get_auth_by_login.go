@@ -1,7 +1,7 @@
 package db
 
 type GetAuthByLoginQuery struct {
-	Login    string
+	Login string
 }
 
 func (receiver *GetAuthByLoginQuery) Sql() string {

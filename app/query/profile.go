@@ -26,12 +26,12 @@ func (receiver *profileHandler) Handle(ctx context.Context, arg ProfileQuery) (*
 
 	r := db.NewRepository(receiver.db)
 
-	profile,err := r.GetProfileByUserId.Handle(ctx,&db.GetProfileByUserIdQuery{UserId: arg.UserId})
+	profile, err := r.GetProfileByUserId.Handle(ctx, &db.GetProfileByUserIdQuery{UserId: arg.UserId})
 
-	if err!=nil {
+	if err != nil {
 		return nil, err
 	}
 
 	result := model.NewProfileFromDb(profile[0])
-	return &result,nil
+	return &result, nil
 }

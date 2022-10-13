@@ -12,12 +12,12 @@ import (
 type ProfilesByFilterQuery struct {
 	FirstName *string `query:"firstName"`
 	LastName  *string `query:"lastName"`
-	Age       *int32 `query:"age"`
-	Gender    *int32 `query:"gender"`
+	Age       *int32  `query:"age"`
+	Gender    *int32  `query:"gender"`
 	City      *string `query:"city"`
 	Hobbies   *string `query:"hobbies"`
-	Limit int64 `query:"limit"`
-	Offset int64 `query:"offset"`
+	Limit     int64   `query:"limit"`
+	Offset    int64   `query:"offset"`
 }
 
 type ProfilesByFilterQueryResult struct {
@@ -38,7 +38,7 @@ func NewProfilesByFilterHandler(db *sql.DB) ProfilesByFilterHandler {
 func (receiver *profilesByFilterHandler) Handle(ctx context.Context, arg ProfilesByFilterQuery) (*ProfilesByFilterQueryResult, error) {
 	r := db.NewRepository(receiver.db)
 
-	count,err := r.GetProfilesCountByFilter.Handle(ctx,&db.GetProfilesCountByFilterQuery{
+	count, err := r.GetProfilesCountByFilter.Handle(ctx, &db.GetProfilesCountByFilterQuery{
 		FirstName: arg.FirstName,
 		LastName:  arg.LastName,
 		Age:       arg.Age,
@@ -47,33 +47,31 @@ func (receiver *profilesByFilterHandler) Handle(ctx context.Context, arg Profile
 		Hobbies:   arg.Hobbies,
 	})
 
-
-	if err!=nil {
+	if err != nil {
 		return nil, err
 	}
 
-	profiles,err := r.GetProfilesPageByFilter.Handle(ctx,&db.GetProfilesPageByFilterQuery{
+	profiles, err := r.GetProfilesPageByFilter.Handle(ctx, &db.GetProfilesPageByFilterQuery{
 		FirstName: arg.FirstName,
 		LastName:  arg.LastName,
 		Age:       arg.Age,
 		Gender:    arg.Gender,
 		City:      arg.City,
 		Hobbies:   arg.Hobbies,
-		Limit:  arg.Limit,
-		Offset: arg.Offset,
-		})
+		Limit:     arg.Limit,
+		Offset:    arg.Offset,
+	})
 
-	if err!=nil {
+	if err != nil {
 		return nil, err
 	}
-
 
 	return &ProfilesByFilterQueryResult{
 		PageInfo: model.PageInfo{
 			From:  int(arg.Offset),
 			Count: len(profiles),
 			Total: int(count[0]),
-			},
-			Items:    common.Map[db.Profile,model.Profile](profiles, model.NewProfileFromDb),
-			},nil
+		},
+		Items: common.Map[db.Profile, model.Profile](profiles, model.NewProfileFromDb),
+	}, nil
 }

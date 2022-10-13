@@ -25,16 +25,16 @@ type App struct {
 	Queries  queries
 }
 
-func NewApp(db *sql.DB,key string) *App {
+func NewApp(db *sql.DB, key string) *App {
 	return &App{
 		Commands: commands{
-			Register:     command.NewRegisterHandler(db,key),
+			Register:     command.NewRegisterHandler(db, key),
 			SaveProfile:  command.NewSaveProfileHandler(db),
 			AddFriend:    command.NewAddFriendHandler(db),
 			RemoveFriend: command.NewRemoveFriendHandler(db),
 		},
 		Queries: queries{
-			IsValidAuth:      query.NewIsValidAuthHandler(db,key),
+			IsValidAuth:      query.NewIsValidAuthHandler(db, key),
 			ProfilesByFilter: query.NewProfilesByFilterHandler(db),
 			Profile:          query.NewProfileHandler(db),
 			Friends:          query.NewFriendsHandler(db),
