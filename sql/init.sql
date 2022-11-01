@@ -8,7 +8,7 @@ login      nvarchar(250)  not null,
 password   varbinary(1000) not null,
 constraint login
 unique (login)
-);
+) ENGINE=InnoDB;
 
 
 create table if not exists social_network.friends
@@ -20,7 +20,7 @@ constraint friends_auth_left_user_id_fk
 foreign key (user_id) references auth (user_id),
 constraint friends_auth_right_user_id_fk
 foreign key (friend_user_id) references auth (user_id)
-);
+) ENGINE=InnoDB;
 
 create table if not exists social_network.profiles
 (
@@ -34,5 +34,5 @@ city       varchar(50)  not null default '',
 hobbies    text         not null,
 constraint profile_auth_user_id_fk
 foreign key (user_id) references auth (user_id)
-);
+) ENGINE=InnoDB;
 

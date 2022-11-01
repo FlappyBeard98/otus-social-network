@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/labstack/echo/v4"
 	"social-network/api"
 	"social-network/app"
 	"social-network/common/database"
 	"social-network/common/http"
+	"social-network/tests"
 	"time"
+
+	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/labstack/echo/v4"
 )
 
 const (
@@ -32,6 +34,9 @@ func main() {
 	}
 
 	a := app.NewApp(dbase, cfg.AesKey)
+
+	tests.GenerateUsers(a,1000000)
+
 	e := echo.New()
 
 	api.SetupRoutes(e, a)

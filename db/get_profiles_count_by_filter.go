@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"social-network/common/database"
 )
 
@@ -15,7 +14,7 @@ type GetProfilesCountByFilterQuery struct {
 }
 
 func (receiver *GetProfilesCountByFilterQuery) Sql() string {
-	return fmt.Sprintf(`
+	return `
 SELECT
 COUNT(*) AS Total
 FROM social_network.profiles
@@ -27,7 +26,7 @@ AND (? IS NULL OR gender = ?)
 AND (? IS NULL OR city = ?)
 AND (? IS NULL OR hobbies LIKE ?)
 ;
-`)
+`
 }
 
 func (receiver *GetProfilesCountByFilterQuery) GetParams() []any {

@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"social-network/common/database"
 )
 
@@ -17,7 +16,7 @@ type GetProfilesPageByFilterQuery struct {
 }
 
 func (receiver *GetProfilesPageByFilterQuery) Sql() string {
-	return fmt.Sprintf(`
+	return `
 SELECT
 	 user_id
 	,first_name
@@ -36,7 +35,8 @@ WHERE
 	AND (? IS NULL OR hobbies LIKE ?)
 LIMIT ?
 OFFSET ?
-;`)
+ORDER BY user_id
+;`
 }
 
 func (receiver *GetProfilesPageByFilterQuery) GetParams() []any {

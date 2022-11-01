@@ -84,12 +84,40 @@ type SqlParametersProvider interface {
 	GetParams() []any
 }
 
+
 // DbHandler is common handler for structs that implements SqlQuery
 type DbHandler[In SqlQuery, Out any] application.Handler[In, []Out]
 
 // dbHandler implements DbHandler
-type dbHandler[In SqlQuery, Out any] struct {
+type dbQuerierHandler[In SqlQuery, Out any] struct {
 	sqlscan.Querier
+}
+
+// Handle implements Handle method of application.Handler interface for generic sql-query execution
+func (receiver *dbQuerierHandler[In, Out]) Handle(ctx context.Context, arg In) (result []Out, err error) {
+
+	var args []any
+	var a any = arg
+	if sqlParametersProvider, ok := a.(SqlParametersProvider); ok {
+		args = sqlParametersProvider.GetParams()
+	} else {
+		args = common.GetFieldsValuesAsSlice(arg)
+	}
+
+	statement := arg.Sql()
+
+	err = sqlscan.Select(ctx, receiver, &result, statement, args...)
+	
+	return
+}
+
+func NewDbQuerierHandler[In SqlQuery, Out any](connection sqlscan.Querier) DbHandler[In, Out] {
+	return &dbQuerierHandler[In, Out]{connection}
+}
+
+// dbHandler implements DbHandler
+type dbHandler[In SqlQuery, Out any] struct {
+	*sql.DB
 }
 
 // Handle implements Handle method of application.Handler interface for generic sql-query execution
@@ -104,11 +132,12 @@ func (receiver *dbHandler[In, Out]) Handle(ctx context.Context, arg In) (result 
 	}
 
 	statement := arg.Sql()
-	err = sqlscan.Select(ctx, receiver, &result, statement, args...)
 
+	_, err = receiver.Exec(statement,args...)
+	
 	return
 }
 
-func NewDbHandler[In SqlQuery, Out any](connection sqlscan.Querier) DbHandler[In, Out] {
-	return &dbHandler[In, Out]{connection}
+func NewDbHandler[In SqlQuery](connection *sql.DB) DbHandler[In, any] {
+	return &dbHandler[In, any]{connection}
 }

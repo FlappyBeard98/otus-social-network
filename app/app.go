@@ -11,6 +11,7 @@ type commands struct {
 	SaveProfile  command.SaveProfileHandler
 	AddFriend    command.AddFriendHandler
 	RemoveFriend command.RemoveFriendHandler
+	ClearUsers   command.ClearUsersHandler
 }
 
 type queries struct {
@@ -32,6 +33,7 @@ func NewApp(db *sql.DB, key string) *App {
 			SaveProfile:  command.NewSaveProfileHandler(db),
 			AddFriend:    command.NewAddFriendHandler(db),
 			RemoveFriend: command.NewRemoveFriendHandler(db),
+			ClearUsers:   command.NewClearUsersHandler(db),
 		},
 		Queries: queries{
 			IsValidAuth:      query.NewIsValidAuthHandler(db, key),
