@@ -3,7 +3,6 @@ services:
   db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: example
     ports:
@@ -15,7 +14,7 @@ services:
       context: .
     environment:
       CONNECTION_STRING: 'root:example@tcp(db:3306)/?multiStatements=true&timeout=5s'
-      API_PORT: 1323
+      PORT: 1323
     ports:
       - '1323:1323'
     depends_on:

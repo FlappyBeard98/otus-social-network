@@ -10,3 +10,9 @@
 ```shell
 sh run.sh
 ```
+
+### TODO 
+- [ ] flow for errors generating 
+- [ ] sql query processing 
+- [ ] rabbit connection 
+- [ ] 
