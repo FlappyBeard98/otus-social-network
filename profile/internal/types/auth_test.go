@@ -1,6 +1,7 @@
 package types
 
 import (
+	"social-network/lib/utils"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
@@ -13,9 +14,14 @@ const (
 	short    = "test7ch"
 )
 
-func TestNewAuthReturnsHashedPassword(t *testing.T) {
+func TestNewAuthReturnsValidAuth(t *testing.T) {
+	hashedPassword := utils.GetHash(password)
+
 	act, _ := NewAuth(login, password)
+
 	assert.NotEqual(t, password, act.Password)
+	assert.Equal(t, hashedPassword, act.Password)
+	assert.Equal(t, login, act.Login)
 }
 
 func TestNewAuthWithShortLoginReturnsError(t *testing.T) {
@@ -34,18 +40,6 @@ func TestNewAuthWithShortPasswordReturnsError(t *testing.T) {
 	assert.ErrorIs(t, err, ErrInvalidInput)
 }
 
-func TestPasswordEqualsWithSamePasswordReturnsTrue(t *testing.T) {
-	sut, _ := NewAuth(login, password)
-	act := sut.PasswordEquals(password)
-	assert.True(t, act)
-}
-
-func TestPasswordEqualsWithOtherPasswordReturnsFalse(t *testing.T) {
-	sut, _ := NewAuth(login, password)
-	act := sut.PasswordEquals("other_password")
-	assert.False(t, act)
-}
-
 func TestInsertAuthReturnsNotNil(t *testing.T) {
 	sut, _ := NewAuth(login, password)
 	act := sut.InsertAuth()
@@ -55,5 +49,11 @@ func TestInsertAuthReturnsNotNil(t *testing.T) {
 func TestUpdatePasswordReturnsNotNil(t *testing.T) {
 	sut, _ := NewAuth(login, password)
 	act := sut.UpdatePassword()
+	assert.NotNil(t, act)
+}
+
+func TestReadByLoginReturnsNotNil(t *testing.T) {
+	sut, _ := NewAuth(login, password)
+	act := sut.ReadByLogin()
 	assert.NotNil(t, act)
 }

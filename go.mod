@@ -6,6 +6,7 @@ require github.com/ilyakaznacheev/cleanenv v1.4.2
 
 require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
+	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/brianvoe/gofakeit/v6 v6.20.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/georgysavva/scany/v2 v2.0.0 // indirect

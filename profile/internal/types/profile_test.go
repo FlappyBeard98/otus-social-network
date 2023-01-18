@@ -91,7 +91,7 @@ func TestNewProfileWithLessThanZeroAgeReturnsError(t *testing.T) {
 		name,
 		-1,
 		1,
-		gofakeit.LetterN(51),
+		name,
 		name)
 	assert.ErrorIs(t, err, ErrInvalidInput)
 }
@@ -103,7 +103,7 @@ func TestNewProfileWithLessThanZeroGenderReturnsError(t *testing.T) {
 		name,
 		1,
 		-1,
-		gofakeit.LetterN(51),
+		name,
 		name)
 	assert.ErrorIs(t, err, ErrInvalidInput)
 }

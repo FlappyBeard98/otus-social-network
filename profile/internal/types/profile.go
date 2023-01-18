@@ -6,16 +6,18 @@ import (
 	"social-network/lib/utils"
 )
 
+// Profile defines user profile data
 type Profile struct {
-	UserId    int64
-	FirstName string
-	LastName  string
-	Age       int32
-	Gender    int32
-	City      string
-	Hobbies   string
+	UserId    int64  `json:"userId" db:"user_id"`       //user identifier
+	FirstName string `json:"firstName" db:"first_name"` //user first name
+	LastName  string `json:"lastName" db:"last_name"`   //user last name
+	Age       int32  `json:"age" db:"age"`              //user age
+	Gender    int32  `json:"gender" db:"gender"`        //user gender
+	City      string `json:"city" db:"city"`            //user city
+	Hobbies   string `json:"hobbies" db:"hobbies"`      //user hobbies
 }
 
+// NewProfile creates new valid Profile or return error if validation failed
 func NewProfile(userId int64,
 	firstName string,
 	lastName string,
@@ -58,11 +60,11 @@ func NewProfile(userId int64,
 	}, nil
 }
 
+// UpsertProfile returns new mysql.SqlQuery for upserting user profile in database
 func (o *Profile) UpsertProfile() *mysql.SqlQuery {
 	params := utils.GetFieldsValuesAsSlice(o)
 	params = append(params, params[1:]...)
-	return mysql.NewSqlQuery(
-		`
+	return mysql.NewSqlQuery(`
 		INSERT INTO social_network.profiles(user_id, first_name, last_name, age, gender, city, hobbies)
 		VALUES (?, ?, ?, ?, ?, ?, ?)
 		ON DUPLICATE KEY UPDATE 

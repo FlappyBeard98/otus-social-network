@@ -3,6 +3,7 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/georgysavva/scany/v2/sqlscan"
 	_ "github.com/go-sql-driver/mysql"
@@ -20,6 +21,17 @@ type SqlQuery struct {
 
 func NewSqlQuery(sql string, params ...any) *SqlQuery {
 	return &SqlQuery{sql: sql, params: params}
+}
+
+func (o *SqlQuery) QueryOne(ctx context.Context, db Db, dst any) error {
+	rows, err := db.QueryContext(ctx, o.sql, o.params...)
+	if err != nil {
+		return fmt.Errorf("scany: query multiple result rows: %w", err)
+	}
+	if err := sqlscan.ScanOne(dst, rows); err != nil {
+		return fmt.Errorf("scanning one: %w", err)
+	}
+	return nil
 }
 
 func (o *SqlQuery) Query(ctx context.Context, db Db, dst any) error {
@@ -56,9 +68,28 @@ type ExecResult struct {
 	RowsAffected int64
 }
 
-func BeginFunc(db *sql.DB, fn func(*sql.Tx) error) error {
+// Like prepares LIKE-statement for sql query
+func Like(str *string, pre bool, post bool) *string {
 
-	tx, err := db.Begin()
+	if str == nil {
+		return nil
+	}
+	s := *str
+
+	if pre {
+		s = "%" + s
+	}
+
+	if post {
+		s = s + "%"
+	}
+
+	return &s
+}
+
+func BeginTxFunc(ctx context.Context, opts *sql.TxOptions,db *sql.DB, fn func(context.Context, *sql.Tx) error) error {
+
+	tx, err := db.BeginTx(ctx,opts)
 
 	if err != nil {
 		return err
@@ -72,7 +103,7 @@ func BeginFunc(db *sql.DB, fn func(*sql.Tx) error) error {
 		}
 	}()
 
-	err = fn(tx)
+	err = fn(ctx,tx)
 
 	if err != nil {
 		return err
@@ -86,6 +117,7 @@ type Db interface {
 	Query(query string, args ...any) (*sql.Rows, error)
 	QueryRow(query string, args ...any) *sql.Row
 	QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
+
 }
 
 type DbConfig struct {
@@ -107,7 +139,7 @@ func Migrate(cfg DbConfig) {
 	}
 }
 
-func Connect(cfg DbConfig) *sql.DB {
+func Connect(cfg DbConfig) Db {
 	db, err := sql.Open("mysql", cfg.ConnectionString)
 
 	if err != nil {

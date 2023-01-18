@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
+
 	"social-network/lib/http"
 	"social-network/lib/mysql"
 	service "social-network/profile/internal"
+
 	"time"
 
 	"github.com/labstack/echo/v4"
-	_ "github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 var (
@@ -25,15 +27,16 @@ func main() {
 	fmt.Printf("%v", app)
 
 	r := echo.New()
-	// r.POST("/register", wrap(app.Commands.Register))
-	// r.GET("/profiles", wrap(app.Queries.ProfilesByFilter))
 
-	// authed := r.Group("profile", middleware.BasicAuth(app.NewBasicAuth()))
-	// authed.GET("/:userId", wrap(app.Queries.Profile))
-	// authed.POST("/:userId", wrap(app.Commands.SaveProfile))
-	// authed.GET("/:userId/friends", wrap(app.Queries.Friends))
-	// authed.POST("/:userId/friends/:friendUserId", wrap(app.Commands.AddFriend))
-	// authed.DELETE("/:userId/friends/:friendUserId", wrap(app.Commands.RemoveFriend))
+	r.POST("/register", app.Register)
+	r.GET("/profiles", app.Profiles)
+
+	authed := r.Group("profile", middleware.BasicAuth(app.NewUserBasicAuth()))
+	authed.GET("/:userId", app.Profile)
+	authed.POST("/:userId", app.SaveProfile)
+	authed.GET("/:userId/friends", app.Friends)
+	authed.POST("/:userId/friends/:friendUserId", app.AddFriend)
+	authed.DELETE("/:userId/friends/:friendUserId", app.DeleteFriend)
 
 	mysql.Migrate(cfg.Db)
 	http.StartHttpServer(r, cfg.Http)
