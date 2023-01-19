@@ -8,7 +8,8 @@ import (
 
 func TestReadProfilesPageReturnsNotNil(t *testing.T) {
 	sut := ProfilesRequest{}
-	act := sut.ReadProfilesPage(1, 1)
+	pageRequest := PageRequest{}
+	act := sut.ReadProfilesPage(&pageRequest)
 	assert.NotNil(t, act)
 }
 

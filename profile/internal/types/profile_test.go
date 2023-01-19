@@ -8,114 +8,110 @@ import (
 )
 
 const (
-	name = "test"
+	validFirstName = "firstName"
+	validLastName  = "lastName"
+	validAge       = 21
+	validGender    = 1
+	validCity      = "city"
+	validHobbies   = "hobbies"
 )
 
 func TestUpsertProfileReturnsNotNil(t *testing.T) {
 	sut, _ := NewProfile(
-		1,
-		name,
-		name,
-		1,
-		1,
-		name,
-		name)
+		validFirstName,
+		validLastName,
+		validAge,
+		validGender,
+		validCity,
+		validHobbies)
 	act := sut.UpsertProfile()
 	assert.NotNil(t, act)
 }
 
-func TestNewProfileReturnsNotNil(t *testing.T) {
+func TestNewProfileReturnsValidProfile(t *testing.T) {
 	act, _ := NewProfile(
-		1,
-		name,
-		name,
-		1,
-		1,
-		name,
-		name)
+		validFirstName,
+		validLastName,
+		validAge,
+		validGender,
+		validCity,
+		validHobbies)
 	assert.NotNil(t, act)
 }
 
 func TestNewProfileWithLongFirstNameReturnsError(t *testing.T) {
 	_, err := NewProfile(
-		1,
 		gofakeit.LetterN(101),
-		name,
-		1,
-		1,
-		name,
-		name)
-	assert.ErrorIs(t, err, ErrInvalidInput)
+		validLastName,
+		validAge,
+		validGender,
+		validCity,
+		validHobbies)
+	assert.Error(t, err)
 }
 
 func TestNewProfileWithLongLastNameReturnsError(t *testing.T) {
 	_, err := NewProfile(
-		1,
-		name,
+		validFirstName,
 		gofakeit.LetterN(101),
-		1,
-		1,
-		name,
-		name)
-	assert.ErrorIs(t, err, ErrInvalidInput)
+		validAge,
+		validGender,
+		validCity,
+		validHobbies)
+	assert.Error(t, err)
 }
 
 func TestNewProfileWithLongCityReturnsError(t *testing.T) {
 	_, err := NewProfile(
-		1,
-		name,
-		name,
-		1,
-		1,
+		validFirstName,
+		validLastName,
+		validAge,
+		validGender,
 		gofakeit.LetterN(51),
-		name)
-	assert.ErrorIs(t, err, ErrInvalidInput)
+		validHobbies)
+	assert.Error(t, err)
 }
 
 func TestNewProfileWithLongHobbiesReturnsError(t *testing.T) {
 	_, err := NewProfile(
-		1,
-		name,
-		name,
-		1,
-		1,
-		name,
+		validFirstName,
+		validLastName,
+		validAge,
+		validGender,
+		validCity,
 		gofakeit.LetterN(5001))
-	assert.ErrorIs(t, err, ErrInvalidInput)
+	assert.Error(t, err)
 }
 
 func TestNewProfileWithLessThanZeroAgeReturnsError(t *testing.T) {
 	_, err := NewProfile(
-		1,
-		name,
-		name,
+		validFirstName,
+		validLastName,
 		-1,
-		1,
-		name,
-		name)
-	assert.ErrorIs(t, err, ErrInvalidInput)
+		validGender,
+		validCity,
+		validHobbies)
+	assert.Error(t, err)
 }
 
 func TestNewProfileWithLessThanZeroGenderReturnsError(t *testing.T) {
 	_, err := NewProfile(
-		1,
-		name,
-		name,
-		1,
+		validFirstName,
+		validLastName,
+		validAge,
 		-1,
-		name,
-		name)
-	assert.ErrorIs(t, err, ErrInvalidInput)
+		validCity,
+		validHobbies)
+	assert.Error(t, err)
 }
 
 func TestNewProfileWithMoreThanTwoGenderReturnsError(t *testing.T) {
 	_, err := NewProfile(
-		1,
-		name,
-		name,
-		1,
+		validFirstName,
+		validLastName,
+		validAge,
 		3,
-		gofakeit.LetterN(51),
-		name)
-	assert.ErrorIs(t, err, ErrInvalidInput)
+		validCity,
+		validHobbies)
+	assert.Error(t, err)
 }

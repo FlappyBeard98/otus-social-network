@@ -1,31 +1,16 @@
 package main
 
 import (
-	"fmt"
-
+	"github.com/swaggo/echo-swagger"
 	"social-network/lib/http"
 	"social-network/lib/mysql"
 	service "social-network/profile/internal"
-
-	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-var (
-	cfgFile = "config.json"
-	Retries = []time.Duration{2 * time.Second, 3 * time.Second, 5 * time.Second, 8 * time.Second, 13 * time.Second}
-)
-
-func main() {
-	cfg := service.LoadConfig(cfgFile)
-	app := service.App{
-		Db: mysql.Connect(cfg.Db),
-	}
-
-	fmt.Printf("%v", app)
-
+func createRouter(app service.App) *echo.Echo{
 	r := echo.New()
 
 	r.POST("/register", app.Register)
@@ -37,6 +22,25 @@ func main() {
 	authed.GET("/:userId/friends", app.Friends)
 	authed.POST("/:userId/friends/:friendUserId", app.AddFriend)
 	authed.DELETE("/:userId/friends/:friendUserId", app.DeleteFriend)
+
+	admin := r.Group("admin", http.NewKeyMiddleware(qaKey))
+	admin.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	return r
+}
+
+var (
+	cfgFile = "config.json"
+	qaKey = "0567904c9b85418084917772d29d0e6d"
+)
+
+func main() {
+	cfg := service.LoadConfig(cfgFile)
+	app := service.App{
+		Db: mysql.Connect(cfg.Db),
+	}
+
+	r := createRouter(app)
 
 	mysql.Migrate(cfg.Db)
 	http.StartHttpServer(r, cfg.Http)

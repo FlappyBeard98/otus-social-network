@@ -14,7 +14,8 @@ func TestReadProfileByUserIdReturnsNotNil(t *testing.T) {
 
 func TestReadUserFriendsProfilesReturnsNotNil(t *testing.T) {
 	sut := UserIdRequest{}
-	act := sut.ReadUserFriendsProfiles(0, 1)
+	pageRequest := PageRequest{}
+	act := sut.ReadUserFriendsProfiles(&pageRequest)
 	assert.NotNil(t, act)
 }
 

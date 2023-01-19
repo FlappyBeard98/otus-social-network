@@ -1,7 +1,8 @@
 package types
 
 import (
-	"fmt"
+	"errors"
+
 	"social-network/lib/mysql"
 )
 
@@ -15,7 +16,7 @@ type Friend struct {
 func NewFriend(userId int64, friendId int64) (*Friend, error) {
 
 	if userId == friendId {
-		return nil, fmt.Errorf("%w: user can not create frield link with himself", ErrInvalidInput)
+		return nil, errors.New("%w: user can not create frield link with himself")
 	}
 
 	return &Friend{

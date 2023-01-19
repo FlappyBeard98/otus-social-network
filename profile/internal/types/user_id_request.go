@@ -39,7 +39,7 @@ func (o *UserIdRequest) ReadUserFriendsTotal() *mysql.SqlQuery {
 		o.UserId)
 }
 
-func (o *UserIdRequest) ReadUserFriendsProfiles(limit int, offset int) *mysql.SqlQuery {
+func (o *UserIdRequest) ReadUserFriendsProfiles(page *PageRequest) *mysql.SqlQuery {
 	return mysql.NewSqlQuery(`
 		WITH friends_page AS (
 			SELECT
@@ -62,6 +62,6 @@ func (o *UserIdRequest) ReadUserFriendsProfiles(limit int, offset int) *mysql.Sq
 		JOIN social_network.profiles p ON p.user_id = f.user_id
 		;`,
 		o.UserId,
-		limit,
-		offset)
+		page.Limit,
+		page.Offset)
 }

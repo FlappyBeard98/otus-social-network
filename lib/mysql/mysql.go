@@ -87,9 +87,9 @@ func Like(str *string, pre bool, post bool) *string {
 	return &s
 }
 
-func BeginTxFunc(ctx context.Context, opts *sql.TxOptions,db *sql.DB, fn func(context.Context, *sql.Tx) error) error {
+func BeginTxFunc(ctx context.Context, opts *sql.TxOptions, db *sql.DB, fn func(context.Context, *sql.Tx) error) error {
 
-	tx, err := db.BeginTx(ctx,opts)
+	tx, err := db.BeginTx(ctx, opts)
 
 	if err != nil {
 		return err
@@ -103,7 +103,7 @@ func BeginTxFunc(ctx context.Context, opts *sql.TxOptions,db *sql.DB, fn func(co
 		}
 	}()
 
-	err = fn(ctx,tx)
+	err = fn(ctx, tx)
 
 	if err != nil {
 		return err
@@ -117,7 +117,6 @@ type Db interface {
 	Query(query string, args ...any) (*sql.Rows, error)
 	QueryRow(query string, args ...any) *sql.Row
 	QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
-
 }
 
 type DbConfig struct {
@@ -139,7 +138,7 @@ func Migrate(cfg DbConfig) {
 	}
 }
 
-func Connect(cfg DbConfig) Db {
+func Connect(cfg DbConfig) *sql.DB {
 	db, err := sql.Open("mysql", cfg.ConnectionString)
 
 	if err != nil {

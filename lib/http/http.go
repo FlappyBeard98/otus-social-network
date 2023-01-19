@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"time"
 
-	_ "github.com/ilyakaznacheev/cleanenv"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/echo/v4"
 )
 
@@ -42,4 +42,10 @@ func StartHttpServer(echo *echo.Echo, cfg HttpConfig) {
 	if err := echo.Shutdown(ctx); err != nil {
 		echo.Logger.Fatal(err)
 	}
+}
+
+func NewKeyMiddleware(accesskey string) echo.MiddlewareFunc{
+	return middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
+		return key == accesskey, nil
+	  })
 }

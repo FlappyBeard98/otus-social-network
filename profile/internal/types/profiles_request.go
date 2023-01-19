@@ -4,7 +4,7 @@ import (
 	"social-network/lib/mysql"
 )
 
-// ProfilesRequest
+// ProfilesRequest used for return user profiles data
 type ProfilesRequest struct {
 	FirstName *string `query:"firstName"` //user first name
 	LastName  *string `query:"lastName"`  //user last name
@@ -46,7 +46,7 @@ func (o *ProfilesRequest) ReadProfilesTotal() *mysql.SqlQuery {
 }
 
 // ReadProfilesPage returns new mysql.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
-func (o *ProfilesRequest) ReadProfilesPage(limit int, offset int) *mysql.SqlQuery {
+func (o *ProfilesRequest) ReadProfilesPage(page *PageRequest) *mysql.SqlQuery {
 	params := []any{
 		o.FirstName,
 		mysql.Like(o.FirstName, false, true),
@@ -60,8 +60,8 @@ func (o *ProfilesRequest) ReadProfilesPage(limit int, offset int) *mysql.SqlQuer
 		o.City,
 		o.Hobbies,
 		mysql.Like(o.Hobbies, true, true),
-		limit,
-		offset,
+		page.Limit,
+		page.Offset,
 	}
 
 	return mysql.NewSqlQuery(`

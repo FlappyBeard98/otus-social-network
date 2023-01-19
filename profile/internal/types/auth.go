@@ -1,7 +1,8 @@
 package types
 
 import (
-	"fmt"
+	"errors"
+
 	"social-network/lib/mysql"
 	"social-network/lib/utils"
 )
@@ -16,11 +17,11 @@ type Auth struct {
 // NewAuth creates new valid Auth with hashed password or return error if validation failed
 func NewAuth(login string, rawPassword string) (*Auth, error) {
 	if len(login) < 8 || len(login) > 250 {
-		return nil, fmt.Errorf("%w: login value must be between 8 and 250 characters", ErrInvalidInput)
+		return nil, errors.New("%w: login value must be between 8 and 250 characters")
 	}
 
 	if len(rawPassword) < 8 {
-		return nil, fmt.Errorf("%w: password must be 8 characters long or more", ErrInvalidInput)
+		return nil, errors.New("%w: password must be 8 characters long or more")
 	}
 
 	passwordHash := utils.GetHash(rawPassword)

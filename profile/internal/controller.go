@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"net/http"
 	"social-network/lib/mysql"
 	"social-network/profile/internal/types"
@@ -15,210 +16,195 @@ func (o *App) Register(c echo.Context) error {
 	r := new(types.RegisterRequest)
 
 	if err := c.Bind(r); err != nil {
-    	return c.String(http.StatusBadRequest, err.Error())
-  	}
-
-	auth,err := types.NewAuth(r.Auth.Login,r.Auth.Password)
-
-	if err != nil {
-    	return c.String(http.StatusBadRequest, err.Error())
-  	}
-
-	profile,err := types.NewProfile()
-
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	
+	auth, err := r.NewAuth()
 
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 
-	fn := func(ctx context.Context,tx *sql.Tx) error {
+	profile, err := r.NewProfile()
 
-		auth.InsertAuth().Exec(ctx,tx)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	fn := func(ctx context.Context, tx *sql.Tx) error {
+
+		qr, err := auth.InsertAuth().Exec(ctx, tx)
+		if err != nil {
+			return err
+		}
+
+		profile.UserId = qr.LastInsertId
+
+		qr, err = profile.UpsertProfile().Exec(ctx, tx)
+		if err != nil {
+			return err
+		}
+
+		if qr.RowsAffected == 0 {
+			return errors.New("profile was not saved")
+		}
+
 		return nil
 	}
 
-	err = mysql.BeginTxFunc(ctx,nil,o.Db,fn)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
-	}
-
-
-
-	password, err := common.Encrypt([]byte(receiver.key), []byte(arg.Password))
-
-	_, err = r.AddAuth.Handle(ctx, &db.AddAuthQuery{
-		Login:    arg.Login,
-		Password: password,
-	})
+	err = mysql.BeginTxFunc(ctx, nil, o.Db, fn)
 
 	if err != nil {
-		return nil, err
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	auth, err := r.GetAuthByLogin.Handle(ctx, &db.GetAuthByLoginQuery{
-		Login: arg.Login,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = r.SaveProfile.Handle(ctx, &db.SaveProfileQuery{
-		UserId:    auth[0].UserId,
-		FirstName: arg.FirstName,
-		LastName:  arg.LastName,
-		Age:       arg.Age,
-		Gender:    arg.Gender,
-		City:      arg.City,
-		Hobbies:   arg.Hobbies,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &RegisterCommandResult{UserId: auth[0].UserId}, nil
-	return c.String(http.StatusOK, "")
+	return c.JSON(http.StatusOK, profile)
 }
 
 func (o *App) Profiles(c echo.Context) error {
-	r := db.NewRepository(receiver.db)
+	ctx := c.Request().Context()
+	r := new(types.ProfilesRequest)
 
-	count, err := r.GetProfilesCountByFilter.Handle(ctx, &db.GetProfilesCountByFilterQuery{
-		FirstName: arg.FirstName,
-		LastName:  arg.LastName,
-		Age:       arg.Age,
-		Gender:    arg.Gender,
-		City:      arg.City,
-		Hobbies:   arg.Hobbies,
-	})
-
-	if err != nil {
-		return nil, err
+	if err := c.Bind(r); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	profiles, err := r.GetProfilesPageByFilter.Handle(ctx, &db.GetProfilesPageByFilterQuery{
-		FirstName: arg.FirstName,
-		LastName:  arg.LastName,
-		Age:       arg.Age,
-		Gender:    arg.Gender,
-		City:      arg.City,
-		Hobbies:   arg.Hobbies,
-		Limit:     arg.Limit,
-		Offset:    arg.Offset,
-	})
+	pr := new(types.PageRequest)
 
-	if err != nil {
-		return nil, err
+	if err := c.Bind(pr); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	return &ProfilesByFilterQueryResult{
-		PageInfo: model.PageInfo{
-			From:  int(arg.Offset),
-			Count: len(profiles),
-			Total: int(count[0]),
-		},
-		Items: common.Map[db.Profile, model.Profile](profiles, model.NewProfileFromDb),
-	}, nil
-	return c.String(http.StatusOK, "")
+	var profiles = make([]types.Profile, 0)
+
+	err := r.ReadProfilesPage(pr).Query(ctx, o.Db, profiles)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	var total int64
+
+	err = r.ReadProfilesTotal().QueryOne(ctx, o.Db, &total)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	result := types.NewPageResponse(pr, profiles, total)
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func (o *App) Profile(c echo.Context) error {
-	r := db.NewRepository(receiver.db)
+	ctx := c.Request().Context()
+	r := new(types.UserIdRequest)
 
-	profile, err := r.GetProfileByUserId.Handle(ctx, &db.GetProfileByUserIdQuery{UserId: arg.UserId})
-
-	if err != nil {
-		return nil, err
+	if err := c.Bind(r); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	result := model.NewProfileFromDb(profile[0])
-	return &result, nil
-	return c.String(http.StatusOK, "")
+	result := new(types.Profile)
+
+	err := r.ReadProfileByUserId().QueryOne(ctx, o.Db, result)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func (o *App) SaveProfile(c echo.Context) error {
-	r := db.NewRepository(receiver.db)
+	ctx := c.Request().Context()
+	r := new(types.Profile)
 
-	_, err := r.SaveProfile.Handle(ctx, &db.SaveProfileQuery{
-		UserId:    arg.UserId,
-		FirstName: arg.FirstName,
-		LastName:  arg.LastName,
-		Age:       arg.Age,
-		Gender:    arg.Gender,
-		City:      arg.City,
-		Hobbies:   arg.Hobbies,
-	})
-
-	if err != nil {
-		return nil, err
+	if err := c.Bind(r); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	return nil, nil
-	return c.String(http.StatusOK, "")
+	qr, err := r.UpsertProfile().Exec(ctx, o.Db)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	if qr.RowsAffected == 0 {
+		return c.JSON(http.StatusInternalServerError, "profile was not saved")
+	}
+
+	return c.JSON(http.StatusOK, r)
 }
 
 func (o *App) Friends(c echo.Context) error {
-	r := db.NewRepository(receiver.db)
+	ctx := c.Request().Context()
+	r := new(types.UserIdRequest)
 
-	count, err := r.GetFriendsCountByUserId.Handle(ctx, &db.GetFriendsCountByUserIdQuery{UserId: arg.UserId})
-
-	if err != nil {
-		return nil, err
+	if err := c.Bind(r); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	profiles, err := r.GetFriendsPageByUserId.Handle(ctx, &db.GetFriendsPageByUserIdQuery{
-		UserId: arg.UserId,
-		Limit:  arg.Limit,
-		Offset: arg.Offset,
-	})
+	pr := new(types.PageRequest)
 
-	if err != nil {
-		return nil, err
+	if err := c.Bind(pr); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	return &FriendsQueryResult{
-		PageInfo: model.PageInfo{
-			From:  int(arg.Offset),
-			Count: len(profiles),
-			Total: int(count[0]),
-		},
-		Items: common.Map[db.Profile, model.Profile](profiles, model.NewProfileFromDb),
-	}, nil
-	return c.String(http.StatusOK, "")
+	var profiles = make([]types.Profile, 0)
+
+	err := r.ReadUserFriendsProfiles(pr).Query(ctx, o.Db, profiles)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	var total int64
+
+	err = r.ReadUserFriendsTotal().QueryOne(ctx, o.Db, &total)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	result := types.NewPageResponse(pr, profiles, total)
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func (o *App) AddFriend(c echo.Context) error {
-	r := db.NewRepository(receiver.db)
+	ctx := c.Request().Context()
+	r := new(types.Friend)
 
-	_, err := r.AddFriend.Handle(ctx, &db.AddFriendQuery{
-		UserId:       arg.UserId,
-		FriendUserId: arg.FriendUserId,
-	})
-
-	if err != nil {
-		return nil, err
+	if err := c.Bind(r); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	return nil, nil
+	qr, err := r.InsertFriend().Exec(ctx, o.Db)
 
-	return c.String(http.StatusOK, "")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	if qr.RowsAffected == 0 {
+		return c.JSON(http.StatusInternalServerError, "friend was not added")
+	}
+
+	return c.JSON(http.StatusOK, r)
 }
 
 func (o *App) DeleteFriend(c echo.Context) error {
-	r := db.NewRepository(receiver.db)
+	ctx := c.Request().Context()
+	r := new(types.Friend)
 
-	_, err := r.RemoveFriend.Handle(ctx, &db.RemoveFriendQuery{
-		UserId:       arg.UserId,
-		FriendUserId: arg.FriendUserId,
-	})
-
-	if err != nil {
-		return nil, err
+	if err := c.Bind(r); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	return nil, nil
-	return c.String(http.StatusOK, "")
+	_, err := r.DeleteFriend().Exec(ctx, o.Db)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, r)
 }
