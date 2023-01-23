@@ -1,1 +1,1 @@
-drop database if exists social_network;
+drop database if exists profiles;

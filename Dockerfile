@@ -1,21 +1,21 @@
-FROM golang:alpine
+# First stage: Build the binary
+FROM golang:alpine AS build-env
 
-# Set necessary environmet variables needed for our image
-ENV GO111MODULE=on \
-CGO_ENABLED=0 \
-GOOS=linux \
-GOARCH=amd64
+ARG service_dir
 
-WORKDIR /app
+WORKDIR /go/src/app
+COPY go.mod go.sum ./
+COPY lib/ lib/
+COPY vendor/ vendor/
+COPY $service_dir $service_dir
 
-COPY . .
+RUN go build -o service $service_dir/main.go
 
-RUN go get -d -v ./...
-RUN go install -v ./...
-RUN go build
+# Second stage: Use a smaller image
+FROM alpine:latest
 
-# Export necessary port
-EXPOSE 1323
+COPY --from=build-env /go/src/app/service /usr/local/bin/
 
+CMD ["service"]
 
-CMD  ["./social-network"]
+#example for build profile service: `docker build --build-arg service_dir=profile -t profile .`

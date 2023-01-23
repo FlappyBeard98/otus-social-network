@@ -28,7 +28,7 @@ func NewFriend(userId int64, friendId int64) (*Friend, error) {
 // InsertFriend returns new mysql.SqlQuery for inserting friend link in database
 func (o *Friend) InsertFriend() *mysql.SqlQuery {
 	return mysql.NewSqlQuery(`
-		INSERT INTO social_network.friends(user_id, friend_user_id)
+		INSERT INTO profiles.friends(user_id, friend_user_id)
 		VALUES (?, ?)
 		;`,
 		o.UserId,
@@ -38,7 +38,7 @@ func (o *Friend) InsertFriend() *mysql.SqlQuery {
 // DeleteFriend returns new mysql.SqlQuery for deleting friend link from database
 func (o *Friend) DeleteFriend() *mysql.SqlQuery {
 	return mysql.NewSqlQuery(`
-		DELETE FROM social_network.friends
+		DELETE FROM profiles.friends
 		WHERE
 			user_id = ?
 			AND friend_user_id = ?

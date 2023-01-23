@@ -64,7 +64,7 @@ func (o *Profile) UpsertProfile() *mysql.SqlQuery {
 	params := utils.GetFieldsValuesAsSlice(o)
 	params = append(params, params[1:]...)
 	return mysql.NewSqlQuery(`
-		INSERT INTO social_network.profiles(user_id, first_name, last_name, age, gender, city, hobbies)
+		INSERT INTO profiles.profiles(user_id, first_name, last_name, age, gender, city, hobbies)
 		VALUES (?, ?, ?, ?, ?, ?, ?)
 		ON DUPLICATE KEY UPDATE 
 			first_name = ?

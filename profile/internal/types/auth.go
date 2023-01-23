@@ -35,7 +35,7 @@ func NewAuth(login string, rawPassword string) (*Auth, error) {
 // InsertAuth returns new mysql.SqlQuery for inserting user auth in database
 func (o *Auth) InsertAuth() *mysql.SqlQuery {
 	return mysql.NewSqlQuery(`
-		INSERT INTO social_network.auth(login, password)
+		INSERT INTO profiles.auth(login, password)
 		VALUES (?, ?);`,
 		o.Login,
 		o.Password)
@@ -44,7 +44,7 @@ func (o *Auth) InsertAuth() *mysql.SqlQuery {
 // UpdatePassword returns new mysql.SqlQuery for updating password in database
 func (o *Auth) UpdatePassword() *mysql.SqlQuery {
 	return mysql.NewSqlQuery(`
-		UPDATE social_network.auth SET
+		UPDATE profiles.auth SET
 			password = ?
 		WHERE
 			user_id = ?;`,
@@ -59,7 +59,7 @@ func (o *Auth) ReadByLogin() *mysql.SqlQuery {
 			user_id
 			,login
 			,password
-		FROM social_network.auth
+		FROM profiles.auth
 		WHERE
 			login = ?;`,
 		o.Login)

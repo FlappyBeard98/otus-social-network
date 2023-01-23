@@ -33,7 +33,7 @@ func (o *ProfilesRequest) ReadProfilesTotal() *mysql.SqlQuery {
 	return mysql.NewSqlQuery(`
 		SELECT
 			COUNT(*) AS Total
-		FROM social_network.profiles
+		FROM profiles.profiles
 		WHERE
 				(? IS NULL OR first_name LIKE ?)
 			AND (? IS NULL OR last_name LIKE ?)
@@ -73,7 +73,7 @@ func (o *ProfilesRequest) ReadProfilesPage(page *PageRequest) *mysql.SqlQuery {
 			,gender
 			,city
 			,hobbies
-		FROM social_network.profiles
+		FROM profiles.profiles
 		WHERE
 				(? IS NULL OR first_name LIKE ?)
 			AND (? IS NULL OR last_name LIKE ?)

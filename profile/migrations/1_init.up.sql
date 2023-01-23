@@ -1,6 +1,6 @@
-create database if not exists social_network;
+create database if not exists profiles;
 
-create table if not exists social_network.auth
+create table if not exists profiles.auth
 (
     user_id    bigint auto_increment
     primary key,
@@ -11,7 +11,7 @@ create table if not exists social_network.auth
 );
 
 
-create table if not exists social_network.friends
+create table if not exists profiles.friends
 (
     user_id  bigint not null,
     friend_user_id bigint not null,
@@ -22,7 +22,7 @@ create table if not exists social_network.friends
     foreign key (friend_user_id) references auth (user_id)
 );
 
-create table if not exists social_network.profiles
+create table if not exists profiles.profiles
 (
     user_id    bigint       not null
     primary key,

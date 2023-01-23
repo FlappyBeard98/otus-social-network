@@ -2,7 +2,8 @@ package utils
 
 import (
 	"crypto/sha256"
-	"fmt"
+	"log"
+	"os/exec"
 	"reflect"
 	"time"
 )
@@ -40,26 +41,38 @@ func GetFieldsValuesAsSlice(obj interface{}) (values []interface{}) {
 	return
 }
 
-func Retry[T any](fn func() (T, error), delays []time.Duration) (r T, err error) {
-
-	f := func() (T, error) {
-		defer func() {
-			if r := recover(); r != nil {
-				fmt.Printf("%+v", r)
-			}
-		}()
-
-		return fn()
-	}
-
+func Retry[T any](fn func() (T, error), delays []time.Duration) (T,error) {
+	var r T
+	var err error
 	for i := 0; i < len(delays); i++ {
-		r, err = f()
-		if err != nil {
-			fmt.Printf("%+v", err)
-		} else {
+		r, err = fn()
+		if err == nil {
 			return r, nil
 		}
 		time.Sleep(delays[i])
 	}
-	return *new(T), err
+	return r, err
+}
+
+func ExecOrFail(name string, arg ...string) {
+	cmd := exec.Command(name, arg...)
+	o, err := cmd.Output()
+	if err != nil {
+		log.Printf("COMMAND: %v\n", cmd)
+		log.Printf("OUTPUT : %v\n", string(o))
+		log.Panic(err.Error())
+	}
+	log.Printf("%v",o)
+}
+
+func ComposeUp(path string){
+	ExecOrFail("docker-compose", "-f", path, "up", "--detach")
+}
+
+func ComposeDown(path string){
+	ExecOrFail("docker-compose", "-f", path, "down", "-v")
+}
+
+func ComposeMigrate(path string, ){
+	ExecOrFail("docker-compose", "-f", path, "build", "--no-cache")
 }
