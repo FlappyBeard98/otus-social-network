@@ -10,18 +10,7 @@ services:
     ports:
       - '3306:3306'
       - '33060:33060'
-  migrate:
-    image: migrate/migrate
-    networks:
-      - otus
-    links:
-      - db
-    depends_on:
-      - db
-    volumes:
-      - ./profile/migrations:/profile/migrations
-    command:
-      [ "-path", "/profile/migrations", "-database",  "mysql://root:example@tcp(db:3306)/mysql?multiStatements=true", "up" ]
+
 networks:
   otus:
   #$ docker run -v {{ migration dir }}:/migrations --network host migrate/migrate -path=/migrations/ -database postgres://localhost:5432/database up 2

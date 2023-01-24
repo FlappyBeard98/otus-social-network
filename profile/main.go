@@ -58,6 +58,6 @@ func main() {
 
 	r := createRouter(app)
 
-	mysql.Migrate(cfg.Db)
+
 	http.StartHttpServer(r, cfg.Http)
 }

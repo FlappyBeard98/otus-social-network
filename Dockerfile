@@ -9,6 +9,8 @@ COPY lib/ lib/
 COPY vendor/ vendor/
 COPY $service_dir $service_dir
 
+#RUN go install github.com/swaggo/swag/cmd/swag@latest
+#RUN swag init --parseVendor --parseInternal --parseDependency -o . --ot json -g $service_dir/main.go
 RUN go build -o service $service_dir/main.go
 
 # Second stage: Use a smaller image
@@ -19,3 +21,4 @@ COPY --from=build-env /go/src/app/service /usr/local/bin/
 CMD ["service"]
 
 #example for build profile service: `docker build --build-arg service_dir=profile -t profile .`
+
