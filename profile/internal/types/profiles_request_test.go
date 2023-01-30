@@ -8,13 +8,18 @@ import (
 
 func TestReadProfilesPageReturnsNotNil(t *testing.T) {
 	sut := ProfilesRequest{}
-	pageRequest := PageRequest{}
-	act := sut.ReadProfilesPage(&pageRequest)
+	act := sut.ReadProfilesPage()
 	assert.NotNil(t, act)
 }
 
 func TestReadProfilesTotalReturnsNotNil(t *testing.T) {
 	sut := ProfilesRequest{}
 	act := sut.ReadProfilesTotal()
+	assert.NotNil(t, act)
+}
+
+func TestProfilesRequestCreateRequestReturnsNotNil(t *testing.T) {
+	sut := ProfilesRequest{}
+	act, _ := sut.CreateRequest(host)
 	assert.NotNil(t, act)
 }

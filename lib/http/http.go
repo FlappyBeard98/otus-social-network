@@ -2,14 +2,16 @@ package http
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type HttpConfig struct {
@@ -44,8 +46,53 @@ func StartHttpServer(echo *echo.Echo, cfg HttpConfig) {
 	}
 }
 
-func NewKeyMiddleware(accesskey string) echo.MiddlewareFunc{
+func NewKeyMiddleware(accesskey string) echo.MiddlewareFunc {
 	return middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
 		return key == accesskey, nil
-	  })
+	})
+}
+
+type RequestFactory interface {
+	CreateRequest(host string) (*http.Request, error)
+}
+
+func GetHttpResponse[T any](requestFactory RequestFactory, host string,setup func(*http.Request)*http.Request) (*T, error) {
+
+	request, err := requestFactory.CreateRequest(host)
+	if err != nil {
+		return nil, err
+	}
+
+	request = setup(request)
+
+	response, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := io.ReadAll(response.Body)
+
+	defer func() { _ = response.Body.Close() }()
+	if response.StatusCode > 299 {
+		err = fmt.Errorf("%v, body: %s", *response, string(data))
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	result := new(T)
+	err = json.Unmarshal(data, result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func SetBasicAuth(username string,password string) func(*http.Request)*http.Request {
+	return func(request *http.Request) *http.Request {
+		request.SetBasicAuth(username, password)
+		return request
+	}
 }

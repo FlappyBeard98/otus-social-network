@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func createRouter(app service.App) *echo.Echo{
+func createRouter(app service.App) *echo.Echo {
 	r := echo.New()
 
 	r.POST("/register", app.Register)
@@ -31,7 +31,7 @@ func createRouter(app service.App) *echo.Echo{
 
 var (
 	cfgFile = "config.json"
-	qaKey = "0567904c9b85418084917772d29d0e6d"
+	qaKey   = "0567904c9b85418084917772d29d0e6d"
 )
 
 // @title           Swagger Social-network API
@@ -57,7 +57,6 @@ func main() {
 	}
 
 	r := createRouter(app)
-
 
 	http.StartHttpServer(r, cfg.Http)
 }

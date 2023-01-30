@@ -35,3 +35,16 @@ func TestInsertFriendReturnsNotNil(t *testing.T) {
 	act := sut.InsertFriend()
 	assert.NotNil(t, act)
 }
+
+func TestAddFriendRequestCreateRequestReturnsNotNil(t *testing.T) {
+	sut := AddFriendRequest{}
+	act, _ := sut.CreateRequest(host)
+	assert.NotNil(t, act)
+}
+
+
+func TestRemoveFriendRequestCreateRequestReturnsNotNil(t *testing.T) {
+	sut := RemoveFriendRequest{}
+	act, _ := sut.CreateRequest(host)
+	assert.NotNil(t, act)
+}

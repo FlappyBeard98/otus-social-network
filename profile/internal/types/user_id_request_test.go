@@ -24,3 +24,18 @@ func TestReadUserFriendsTotalReturnsNotNil(t *testing.T) {
 	act := sut.ReadUserFriendsTotal()
 	assert.NotNil(t, act)
 }
+
+func TestGetProfileRequestCreateRequestReturnsNotNil(t *testing.T) {
+	sut := GetProfileRequest{}
+	act, _ := sut.CreateRequest(host)
+	assert.NotNil(t, act)
+}
+
+
+func TestGetFriendsRequestCreateRequestReturnsNotNil(t *testing.T) {
+	sut := GetFriendsRequest{}
+	act, _ := sut.CreateRequest(host)
+	assert.NotNil(t, act)
+}
+
+

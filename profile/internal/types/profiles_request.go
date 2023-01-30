@@ -1,6 +1,8 @@
 package types
 
 import (
+	"fmt"
+	"net/http"
 	"social-network/lib/mysql"
 )
 
@@ -12,6 +14,7 @@ type ProfilesRequest struct {
 	Gender    *int32  `query:"gender"`    //user gender
 	City      *string `query:"city"`      //user city
 	Hobbies   *string `query:"hobbies"`   //user hobbies
+	PageRequest
 }
 
 // ReadProfilesTotal returns new mysql.SqlQuery for selecting total count of user profiles by filter in ProfilesRequest
@@ -46,7 +49,7 @@ func (o *ProfilesRequest) ReadProfilesTotal() *mysql.SqlQuery {
 }
 
 // ReadProfilesPage returns new mysql.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
-func (o *ProfilesRequest) ReadProfilesPage(page *PageRequest) *mysql.SqlQuery {
+func (o *ProfilesRequest) ReadProfilesPage() *mysql.SqlQuery {
 	params := []any{
 		o.FirstName,
 		mysql.Like(o.FirstName, false, true),
@@ -60,8 +63,8 @@ func (o *ProfilesRequest) ReadProfilesPage(page *PageRequest) *mysql.SqlQuery {
 		o.City,
 		o.Hobbies,
 		mysql.Like(o.Hobbies, true, true),
-		page.Limit,
-		page.Offset,
+		o.Limit,
+		o.Offset,
 	}
 
 	return mysql.NewSqlQuery(`
@@ -84,4 +87,20 @@ func (o *ProfilesRequest) ReadProfilesPage(page *PageRequest) *mysql.SqlQuery {
 		LIMIT ?
 		OFFSET ?;`,
 		params...)
+}
+
+func (o *ProfilesRequest) CreateRequest(host string) (*http.Request, error) {
+
+	route := fmt.Sprintf("%s/profiles?firstName=%v&lastName=%v&age=%v&gender=%v&city=%v&hobbies=%v&limit=%v&offset=%v",
+		host, o.FirstName, o.LastName, o.Age, o.Gender, o.City, o.Hobbies, o.Limit, o.Offset)
+
+	request, err := http.NewRequest(http.MethodGet, route, nil)
+	if err != nil {
+		return nil, err
+	}
+	
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Accept", "application/json")
+
+	return request, nil
 }

@@ -2,6 +2,8 @@ package types
 
 import (
 	"errors"
+	"fmt"
+	"net/http"
 
 	"social-network/lib/mysql"
 )
@@ -45,4 +47,38 @@ func (o *Friend) DeleteFriend() *mysql.SqlQuery {
 		;`,
 		o.UserId,
 		o.FriendId)
+}
+
+
+
+type AddFriendRequest  Friend
+
+func (o *AddFriendRequest) CreateRequest(host string) (*http.Request, error) {
+	route := fmt.Sprintf("%s/%d/friends/%d",host, o.UserId,o.FriendId)
+
+	request, err := http.NewRequest(http.MethodPost, route, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Accept", "application/json")
+
+	return request, nil
+}
+
+type RemoveFriendRequest  Friend
+
+func (o *RemoveFriendRequest) CreateRequest(host string) (*http.Request, error) {
+	route := fmt.Sprintf("%s/%d/%d",host, o.UserId,o.FriendId)
+
+	request, err := http.NewRequest(http.MethodDelete, route, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Accept", "application/json")
+
+	return request, nil
 }

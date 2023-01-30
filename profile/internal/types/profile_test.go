@@ -14,6 +14,7 @@ const (
 	validGender    = 1
 	validCity      = "city"
 	validHobbies   = "hobbies"
+	host           = "http://localhost:1323"
 )
 
 func TestUpsertProfileReturnsNotNil(t *testing.T) {
@@ -114,4 +115,17 @@ func TestNewProfileWithMoreThanTwoGenderReturnsError(t *testing.T) {
 		validCity,
 		validHobbies)
 	assert.Error(t, err)
+}
+
+
+func TestProfilesCreateRequestReturnsNotNil(t *testing.T) {
+	sut, _ := NewProfile(
+		validFirstName,
+		validLastName,
+		validAge,
+		validGender,
+		validCity,
+		validHobbies)
+	act, _ := sut.CreateRequest(host)
+	assert.NotNil(t, act)
 }

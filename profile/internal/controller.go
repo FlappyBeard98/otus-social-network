@@ -81,15 +81,9 @@ func (o *App) Profiles(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	pr := new(types.PageRequest)
-
-	if err := c.Bind(pr); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
-
 	var profiles = make([]types.Profile, 0)
 
-	err := r.ReadProfilesPage(pr).Query(ctx, o.Db, profiles)
+	err := r.ReadProfilesPage().Query(ctx, o.Db, profiles)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -103,7 +97,7 @@ func (o *App) Profiles(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	result := types.NewPageResponse(pr, profiles, total)
+	result := types.NewPageResponse(&r.PageRequest, profiles, total)
 
 	return c.JSON(http.StatusOK, result)
 }

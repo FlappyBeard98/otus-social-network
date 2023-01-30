@@ -41,7 +41,7 @@ func GetFieldsValuesAsSlice(obj interface{}) (values []interface{}) {
 	return
 }
 
-func Retry[T any](fn func() (T, error), delays []time.Duration) (T,error) {
+func Retry[T any](fn func() (T, error), delays []time.Duration) (T, error) {
 	var r T
 	var err error
 	for i := 0; i < len(delays); i++ {
@@ -62,17 +62,17 @@ func ExecOrFail(name string, arg ...string) {
 		log.Printf("OUTPUT : %v\n", string(o))
 		log.Panic(err.Error())
 	}
-	log.Printf("%v",o)
+	log.Printf("%v", o)
 }
 
-func ComposeUp(path string){
+func ComposeUp(path string) {
 	ExecOrFail("docker-compose", "-f", path, "up", "--detach")
 }
 
-func ComposeDown(path string){
+func ComposeDown(path string) {
 	ExecOrFail("docker-compose", "-f", path, "down", "-v")
 }
 
-func ComposeMigrate(path string, ){
+func ComposeMigrate(path string) {
 	ExecOrFail("docker-compose", "-f", path, "build", "--no-cache")
 }
