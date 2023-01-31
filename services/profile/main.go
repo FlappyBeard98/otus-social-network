@@ -1,10 +1,14 @@
 package main
 
 import (
-	"github.com/swaggo/echo-swagger"
+	"database/sql"
 	"social-network/lib/http"
 	"social-network/lib/mysql"
-	service "social-network/profile/internal"
+	"social-network/lib/utils"
+	service "social-network/services/profile/internal"
+	"time"
+
+	"github.com/swaggo/echo-swagger"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -52,8 +56,16 @@ var (
 // @securityDefinitions.basic  BasicAuth
 func main() {
 	cfg := service.LoadConfig(cfgFile)
+	delays := []time.Duration{3 * time.Second, 5 * time.Second, 8 * time.Second}
+
+	db, err := utils.Retry(func() (*sql.DB, error) { return mysql.Connect(cfg.Db) }, delays...)
+	
+	if err != nil {
+		panic(err)
+	}
+
 	app := service.App{
-		Db: mysql.Connect(cfg.Db),
+		Db: db,
 	}
 
 	r := createRouter(app)

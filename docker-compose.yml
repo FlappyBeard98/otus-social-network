@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  db:
+  profile_db:
     image: mysql
     networks:
       - otus
@@ -10,7 +10,21 @@ services:
     ports:
       - '3306:3306'
       - '33060:33060'
-
+  profile:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        - service_dir=profile
+    environment:
+      CONNECTION_STRING: root:example@tcp(profile_db:3306)/profile?multiStatements=true&timeout=5s
+      PORT: 1323
+    networks:
+      - otus
+    ports:
+      - '1323:1323'
+    depends_on:
+      - profile_db
 networks:
   otus:
-  #$ docker run -v {{ migration dir }}:/migrations --network host migrate/migrate -path=/migrations/ -database postgres://localhost:5432/database up 2
+  

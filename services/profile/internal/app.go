@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"social-network/lib/http"
 	"social-network/lib/mysql"
-	"social-network/profile/internal/types"
+	"social-network/services/profile/internal/types"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/labstack/echo/v4"

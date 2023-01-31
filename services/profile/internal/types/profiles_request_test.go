@@ -17,9 +17,3 @@ func TestReadProfilesTotalReturnsNotNil(t *testing.T) {
 	act := sut.ReadProfilesTotal()
 	assert.NotNil(t, act)
 }
-
-func TestProfilesRequestCreateRequestReturnsNotNil(t *testing.T) {
-	sut := ProfilesRequest{}
-	act, _ := sut.CreateRequest(host)
-	assert.NotNil(t, act)
-}

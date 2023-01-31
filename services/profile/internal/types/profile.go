@@ -1,11 +1,9 @@
 package types
 
 import (
-	"bytes"
-	"encoding/json"
+
 	"errors"
-	"fmt"
-	"net/http"
+
 
 	"social-network/lib/mysql"
 	"social-network/lib/utils"
@@ -79,24 +77,3 @@ func (o *Profile) UpsertProfile() *mysql.SqlQuery {
 			,hobbies = ?;`,
 		params...)
 }
-
-func (o *Profile) CreateRequest(host string) (*http.Request, error) {
-
-	route := fmt.Sprintf("%s/%d",host, o.UserId)
-
-	body, err := json.Marshal(o)
-	if err != nil {
-		return nil, err
-	}
-
-	request, err := http.NewRequest(http.MethodPost, route, bytes.NewReader(body))
-	if err != nil {
-		return nil, err
-	}
-
-	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Accept", "application/json")
-
-	return request, nil
-}
- 

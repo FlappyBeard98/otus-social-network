@@ -116,16 +116,3 @@ func TestNewProfileWithMoreThanTwoGenderReturnsError(t *testing.T) {
 		validHobbies)
 	assert.Error(t, err)
 }
-
-
-func TestProfilesCreateRequestReturnsNotNil(t *testing.T) {
-	sut, _ := NewProfile(
-		validFirstName,
-		validLastName,
-		validAge,
-		validGender,
-		validCity,
-		validHobbies)
-	act, _ := sut.CreateRequest(host)
-	assert.NotNil(t, act)
-}

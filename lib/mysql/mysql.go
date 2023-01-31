@@ -7,7 +7,6 @@ import (
 
 	"github.com/georgysavva/scany/v2/sqlscan"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -121,33 +120,19 @@ type Db interface {
 
 type DbConfig struct {
 	ConnectionString string `json:"connectionString" env:"CONNECTION_STRING"`
-	MigrationsSource string `json:"migrationsSource" env:"MIGRATIONS" env-default:"file:///migrations"`
 }
 
-func Migrate(cfg DbConfig) {
-	m, err := migrate.New(cfg.MigrationsSource, cfg.ConnectionString)
 
-	if err != nil {
-		panic(err)
-	}
-
-	err = m.Up()
-
-	if err != nil {
-		panic(err)
-	}
-}
-
-func Connect(cfg DbConfig) *sql.DB {
+func Connect(cfg DbConfig) (*sql.DB, error) {
 	db, err := sql.Open("mysql", cfg.ConnectionString)
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	if err = db.Ping(); err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return db
+	return db, nil
 }

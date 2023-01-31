@@ -60,7 +60,7 @@ func TestRetryReturnsNotNil(t *testing.T) {
 
 	retries := []time.Duration{time.Microsecond, 2 * time.Millisecond}
 
-	act, err := Retry(func() (any, error) { return 1, nil }, retries)
+	act, err := Retry(func() (any, error) { return 1, nil }, retries...)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, act)
@@ -78,7 +78,7 @@ func TestRetryWithSingleErrorReturnsNotNil(t *testing.T) {
 		} else {
 			return 1, nil
 		}
-	}, retries)
+	}, retries...)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, act)
@@ -89,7 +89,7 @@ func TestRetryWithErrorOnAllRetriesReturnsError(t *testing.T) {
 	retries := []time.Duration{time.Microsecond, 2 * time.Millisecond}
 	fn := func() (any, error) { return nil, errors.New("test") }
 
-	act, err := Retry(fn, retries)
+	act, err := Retry(fn, retries...)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, act)

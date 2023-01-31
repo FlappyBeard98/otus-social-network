@@ -56,7 +56,7 @@ type RequestFactory interface {
 	CreateRequest(host string) (*http.Request, error)
 }
 
-func GetHttpResponse[T any](requestFactory RequestFactory, host string,setup func(*http.Request)*http.Request) (*T, error) {
+func GetHttpResponse[T any](requestFactory RequestFactory, host string, setup func(*http.Request) *http.Request) (*T, error) {
 
 	request, err := requestFactory.CreateRequest(host)
 	if err != nil {
@@ -90,7 +90,7 @@ func GetHttpResponse[T any](requestFactory RequestFactory, host string,setup fun
 	return result, nil
 }
 
-func SetBasicAuth(username string,password string) func(*http.Request)*http.Request {
+func SetBasicAuth(username string, password string) func(*http.Request) *http.Request {
 	return func(request *http.Request) *http.Request {
 		request.SetBasicAuth(username, password)
 		return request

@@ -7,11 +7,11 @@ WORKDIR /go/src/app
 COPY go.mod go.sum ./
 COPY lib/ lib/
 COPY vendor/ vendor/
-COPY $service_dir $service_dir
+COPY services/$service_dir services/$service_dir
 
-#RUN go install github.com/swaggo/swag/cmd/swag@latest
-#RUN swag init --parseVendor --parseInternal --parseDependency -o . --ot json -g $service_dir/main.go
-RUN go build -o service $service_dir/main.go
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN swag init --parseVendor --parseInternal --parseDependency -o . --ot json -g services/$service_dir/main.go
+RUN go build -o service services/$service_dir/main.go
 
 # Second stage: Use a smaller image
 FROM alpine:latest
@@ -20,5 +20,5 @@ COPY --from=build-env /go/src/app/service /usr/local/bin/
 
 CMD ["service"]
 
-#example for build profile service: `docker build --build-arg service_dir=profile -t profile .`
+#example for build profile service: `docker build --build-arg service_dir=profile -t profile -f . /services`
 

@@ -1,8 +1,6 @@
 package types
 
 import (
-	"fmt"
-	"net/http"
 	"social-network/lib/mysql"
 )
 
@@ -89,18 +87,3 @@ func (o *ProfilesRequest) ReadProfilesPage() *mysql.SqlQuery {
 		params...)
 }
 
-func (o *ProfilesRequest) CreateRequest(host string) (*http.Request, error) {
-
-	route := fmt.Sprintf("%s/profiles?firstName=%v&lastName=%v&age=%v&gender=%v&city=%v&hobbies=%v&limit=%v&offset=%v",
-		host, o.FirstName, o.LastName, o.Age, o.Gender, o.City, o.Hobbies, o.Limit, o.Offset)
-
-	request, err := http.NewRequest(http.MethodGet, route, nil)
-	if err != nil {
-		return nil, err
-	}
-	
-	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Accept", "application/json")
-
-	return request, nil
-}

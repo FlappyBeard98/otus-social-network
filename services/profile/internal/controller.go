@@ -6,7 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"social-network/lib/mysql"
-	"social-network/profile/internal/types"
+	"social-network/services/profile/internal/types"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,10 +18,8 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        id   path      int  true  "Account ID"
-// @Success      200  {object}  model.Account
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      404  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
+// @Success      200  {object}  any
+// @Failure      400  {object}  any
 // @Router       /accounts/{id} [get]
 func (o *App) Register(c echo.Context) error {
 	ctx := c.Request().Context()
