@@ -1,4 +1,6 @@
 #!/bin/sh
+# run linters and tests
+go fmt ./... && go vet ./... && go test ./...
 # start mysql and profile service
 docker compose up -d
 # wait for mysql to warm up

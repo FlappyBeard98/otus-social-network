@@ -1,10 +1,9 @@
+// Package http contains helper functions for http server
 package http
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"os/signal"
@@ -14,8 +13,9 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+// HttpConfig contains configuration for http server
 type HttpConfig struct {
-	Port int `json:"port" env:"PORT" env-default:"1323"`
+	Port int `json:"port" env:"PORT" env-default:"1323"` // Port for http server
 }
 
 // GetEchoPort returns formatted port for echo http server
@@ -46,53 +46,9 @@ func StartHttpServer(echo *echo.Echo, cfg HttpConfig) {
 	}
 }
 
+// NewKeyMiddleware returns middleware for echo server that checks if request has correct key
 func NewKeyMiddleware(accesskey string) echo.MiddlewareFunc {
 	return middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
 		return key == accesskey, nil
 	})
-}
-
-type RequestFactory interface {
-	CreateRequest(host string) (*http.Request, error)
-}
-
-func GetHttpResponse[T any](requestFactory RequestFactory, host string, setup func(*http.Request) *http.Request) (*T, error) {
-
-	request, err := requestFactory.CreateRequest(host)
-	if err != nil {
-		return nil, err
-	}
-
-	request = setup(request)
-
-	response, err := http.DefaultClient.Do(request)
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := io.ReadAll(response.Body)
-
-	defer func() { _ = response.Body.Close() }()
-	if response.StatusCode > 299 {
-		err = fmt.Errorf("%v, body: %s", *response, string(data))
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	result := new(T)
-	err = json.Unmarshal(data, result)
-	if err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func SetBasicAuth(username string, password string) func(*http.Request) *http.Request {
-	return func(request *http.Request) *http.Request {
-		request.SetBasicAuth(username, password)
-		return request
-	}
 }

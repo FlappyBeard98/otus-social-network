@@ -1,3 +1,4 @@
+// Package service contains all business logic
 package service
 
 import (
@@ -10,9 +11,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// config contains all configuration for service
 type config struct {
-	Db   mysql.DbConfig  `json:"db"`
-	Http http.HttpConfig `json:"http"`
+	Db   mysql.DbConfig  `json:"db"`   // Database configuration
+	Http http.HttpConfig `json:"http"` // Http configuration
 }
 
 // LoadConfigFromJsonFile load configuration in Config struct
@@ -26,10 +28,12 @@ func LoadConfig(path string) config {
 	return cfg
 }
 
+// App contains all application logic
 type App struct {
-	Db *sql.DB
+	Db *sql.DB // Database connection
 }
 
+// NewUserBasicAuth returns a function that can be used as a BasicAuthValidator
 func (o *App) NewUserBasicAuth() func(string, string, echo.Context) (bool, error) {
 	return func(login string, password string, context echo.Context) (bool, error) {
 		givenAuth, err := types.NewAuth(login, password)

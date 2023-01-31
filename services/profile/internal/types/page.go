@@ -1,3 +1,4 @@
+// Package types contains common types for all services
 package types
 
 // PageInfo represents requested page metadata
@@ -19,6 +20,7 @@ type PageResponse[T any] struct {
 	PageInfo PageInfo `json:"pageInfo"` //page metadata
 }
 
+// NewPageResponse returns new PageResponse
 func NewPageResponse[T any](r *PageRequest, items []T, total int64) *PageResponse[T] {
 	return &PageResponse[T]{
 		Items: items,

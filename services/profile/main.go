@@ -1,3 +1,4 @@
+// Package: main
 package main
 
 import (
@@ -14,6 +15,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+// createRouter creates a new router
 func createRouter(app service.App) *echo.Echo {
 	r := echo.New()
 
@@ -34,8 +36,8 @@ func createRouter(app service.App) *echo.Echo {
 }
 
 var (
-	cfgFile = "config.json"
-	qaKey   = "0567904c9b85418084917772d29d0e6d"
+	cfgFile = "config.json"                      // Path to config file
+	qaKey   = "0567904c9b85418084917772d29d0e6d" // QA key
 )
 
 // @title           Swagger Social-network API
@@ -59,7 +61,7 @@ func main() {
 	delays := []time.Duration{3 * time.Second, 5 * time.Second, 8 * time.Second}
 
 	db, err := utils.Retry(func() (*sql.DB, error) { return mysql.Connect(cfg.Db) }, delays...)
-	
+
 	if err != nil {
 		panic(err)
 	}

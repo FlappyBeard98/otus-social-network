@@ -40,6 +40,7 @@ func (o *UserIdRequest) ReadUserFriendsTotal() *mysql.SqlQuery {
 		o.UserId)
 }
 
+// ReadProfilesPage returns new mysql.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
 func (o *UserIdRequest) ReadUserFriendsProfiles(page *PageRequest) *mysql.SqlQuery {
 	return mysql.NewSqlQuery(`
 		WITH friends_page AS (
@@ -66,4 +67,3 @@ func (o *UserIdRequest) ReadUserFriendsProfiles(page *PageRequest) *mysql.SqlQue
 		page.Limit,
 		page.Offset)
 }
-

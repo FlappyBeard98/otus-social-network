@@ -86,4 +86,3 @@ func (o *ProfilesRequest) ReadProfilesPage() *mysql.SqlQuery {
 		OFFSET ?;`,
 		params...)
 }
-

@@ -11,16 +11,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// ShowAccount godoc
-// @Summary      Show an account
-// @Description  get string by ID
-// @Tags         accounts
-// @Accept       json
-// @Produce      json
-// @Param        id   path      int  true  "Account ID"
-// @Success      200  {object}  any
-// @Failure      400  {object}  any
-// @Router       /accounts/{id} [get]
+// Register godoc
+// @Summary Register new user
+// @Description Register new user
+// @Tags public
+// @Accept  json
+// @Produce  json
+// @Param body body types.RegisterRequest true "Register request"
+// @Success 200 {object} types.Profile
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /register [post]
 func (o *App) Register(c echo.Context) error {
 	ctx := c.Request().Context()
 	r := new(types.RegisterRequest)
@@ -71,6 +72,25 @@ func (o *App) Register(c echo.Context) error {
 	return c.JSON(http.StatusOK, profile)
 }
 
+// Profiles godoc
+// @Summary      Show profiles
+// @Description  get page of profiles
+// @Tags         public
+// @Accept       json
+// @Produce      json
+// @Param        offset query      int  false  "Page offset"
+// @Param        limit  query      int  false  "Page limit"
+// @Param        firstName  query      string  true  "First name"
+// @Param        lastName  query      string  true  "Last name"
+// @Param        age  query      int  true  "Age"
+// @Param        gender query      int  true "Gender"
+// @Param        city query      string  true "City"
+// @Param        hobbies query      string  true "Hobbies"
+// @Success      200  {object}  types.PageResponse[types.Profile]
+// @Failure      400  {object}  string
+// @Failure      404  {object}  string
+// @Failure      500  {object}  string
+// @Router       /profiles [get]
 func (o *App) Profiles(c echo.Context) error {
 	ctx := c.Request().Context()
 	r := new(types.ProfilesRequest)
@@ -100,6 +120,19 @@ func (o *App) Profiles(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+// Profile godoc
+// @Summary      Show profile
+// @Description  get profile by user id
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        userId query      int  true  "User id"
+// @Success      200  {object}  types.Profile
+// @Failure      400  {object}  string
+// @Failure      404  {object}  string
+// @Failure      500  {object}  string
+// @Router       /profile [get]
+// @Security     BasicAuth
 func (o *App) Profile(c echo.Context) error {
 	ctx := c.Request().Context()
 	r := new(types.UserIdRequest)
@@ -119,6 +152,19 @@ func (o *App) Profile(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+// SaveProfile godoc
+// @Summary      Save profile
+// @Description  save profile
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        body body types.Profile true "Profile"
+// @Success      200  {object}  types.Profile
+// @Failure      400  {object}  string
+// @Failure      404  {object}  string
+// @Failure      500  {object}  string
+// @Router       /profile [post]
+// @Security     BasicAuth
 func (o *App) SaveProfile(c echo.Context) error {
 	ctx := c.Request().Context()
 	r := new(types.Profile)
@@ -140,6 +186,21 @@ func (o *App) SaveProfile(c echo.Context) error {
 	return c.JSON(http.StatusOK, r)
 }
 
+// Friends godoc
+// @Summary      Show friends
+// @Description  get page of friends
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        userId query      int  true  "User id"
+// @Param        offset query      int  false  "Page offset"
+// @Param        limit  query      int  false  "Page limit"
+// @Success      200  {object}  types.PageResponse[types.Profile]
+// @Failure      400  {object}  string
+// @Failure      404  {object}  string
+// @Failure      500  {object}  string
+// @Router       /friends [get]
+// @Security     BasicAuth
 func (o *App) Friends(c echo.Context) error {
 	ctx := c.Request().Context()
 	r := new(types.UserIdRequest)
@@ -175,6 +236,20 @@ func (o *App) Friends(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+// AddFriend godoc
+// @Summary      Add friend
+// @Description  add friend by user id
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        userId query      int  true  "User id"
+// @Param        friendId query      int  true  "Friend id"
+// @Success      200  {object}  types.Friend
+// @Failure      400  {object}  string
+// @Failure      404  {object}  string
+// @Failure      500  {object}  string
+// @Router       /friend [post]
+// @Security     BasicAuth
 func (o *App) AddFriend(c echo.Context) error {
 	ctx := c.Request().Context()
 	r := new(types.Friend)
@@ -196,6 +271,20 @@ func (o *App) AddFriend(c echo.Context) error {
 	return c.JSON(http.StatusOK, r)
 }
 
+// DeleteFriend godoc
+// @Summary      Delete friend
+// @Description  delete friend by user id
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        userId query      int  true  "User id"
+// @Param        friendId query      int  true  "Friend id"
+// @Success      200  {object}  types.Friend
+// @Failure      400  {object}  string
+// @Failure      404  {object}  string
+// @Failure      500  {object}  string
+// @Router       /friend [delete]
+// @Security     BasicAuth
 func (o *App) DeleteFriend(c echo.Context) error {
 	ctx := c.Request().Context()
 	r := new(types.Friend)

@@ -1,3 +1,4 @@
+// Package utils contains some useful functions
 package utils
 
 import (
@@ -39,6 +40,7 @@ func GetFieldsValuesAsSlice(obj interface{}) (values []interface{}) {
 	return
 }
 
+// Retry retries a function with delays
 func Retry[T any](fn func() (T, error), delays ...time.Duration) (T, error) {
 	var r T
 	var err error

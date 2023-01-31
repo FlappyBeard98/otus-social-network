@@ -1,9 +1,7 @@
 package types
 
 import (
-
 	"errors"
-
 
 	"social-network/lib/mysql"
 	"social-network/lib/utils"

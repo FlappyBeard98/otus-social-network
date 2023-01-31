@@ -12,12 +12,12 @@ type RegisterRequest struct {
 	Hobbies   string `json:"hobbies" `  //user hobbies
 }
 
+// NewAuth returns new Auth from RegisterRequest
 func (o *RegisterRequest) NewAuth() (*Auth, error) {
 	return NewAuth(o.Login, o.Password)
 }
 
+// NewProfile returns new Profile from RegisterRequest
 func (o *RegisterRequest) NewProfile() (*Profile, error) {
 	return NewProfile(o.FirstName, o.LastName, o.Age, o.Gender, o.City, o.Hobbies)
 }
-
-
