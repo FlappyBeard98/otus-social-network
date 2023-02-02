@@ -112,61 +112,22 @@ info:
   title: Swagger social-network API
   version: "1.0"
 paths:
-  /friend:
-    delete:
-      consumes:
-      - application/json
-      description: delete friend by user id
-      parameters:
-      - description: User id
-        in: query
-        name: userId
-        required: true
-        type: integer
-      - description: Friend id
-        in: query
-        name: friendId
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Friend'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      security:
-      - BasicAuth: []
-      summary: Delete friend
-      tags:
-      - user
+  /admin/generate:
     post:
       consumes:
       - application/json
-      description: add friend by user id
+      description: generate n users
       parameters:
-      - description: User id
+      - description: Count of users
         in: query
-        name: userId
+        name: count
         required: true
         type: integer
-      - description: Friend id
+      - description: Force generate with recreation
         in: query
-        name: friendId
+        name: force
         required: true
-        type: integer
+        type: boolean
       produces:
       - application/json
       responses:
@@ -187,54 +148,11 @@ paths:
           schema:
             type: string
       security:
-      - BasicAuth: []
-      summary: Add friend
+      - KeyAuth: []
+      summary: Generate users
       tags:
-      - user
-  /friends:
-    get:
-      consumes:
-      - application/json
-      description: get page of friends
-      parameters:
-      - description: User id
-        in: query
-        name: userId
-        required: true
-        type: integer
-      - description: Page offset
-        in: query
-        name: offset
-        type: integer
-      - description: Page limit
-        in: query
-        name: limit
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/social-network_services_profile_internal_types.PageResponse-types_Profile'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      security:
-      - BasicAuth: []
-      summary: Show friends
-      tags:
-      - user
-  /profile:
+      - admin
+  /profile/:userId:
     get:
       consumes:
       - application/json
@@ -302,6 +220,128 @@ paths:
       security:
       - BasicAuth: []
       summary: Save profile
+      tags:
+      - user
+  /profile/:userId/friend/:friendId:
+    delete:
+      consumes:
+      - application/json
+      description: delete friend by user id
+      parameters:
+      - description: User id
+        in: query
+        name: userId
+        required: true
+        type: integer
+      - description: Friend id
+        in: query
+        name: friendId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Friend'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Delete friend
+      tags:
+      - user
+  /profile/:userId/friends:
+    get:
+      consumes:
+      - application/json
+      description: get page of friends
+      parameters:
+      - description: User id
+        in: query
+        name: userId
+        required: true
+        type: integer
+      - description: Page offset
+        in: query
+        name: offset
+        type: integer
+      - description: Page limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/social-network_services_profile_internal_types.PageResponse-types_Profile'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Show friends
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: add friend by user id
+      parameters:
+      - description: User id
+        in: query
+        name: userId
+        required: true
+        type: integer
+      - description: Friend id
+        in: query
+        name: friendId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Friend'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Add friend
       tags:
       - user
   /profiles:

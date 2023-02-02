@@ -43,7 +43,8 @@ func createRouter(app service.App) *echo.Echo {
 
 	r.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	_ = r.Group("admin", http.NewKeyMiddleware(qaKey))
+	admin := r.Group("admin", http.NewKeyMiddleware(qaKey))
+	admin.POST("/generate", app.Generate)
 
 	return r
 }

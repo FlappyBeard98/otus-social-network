@@ -11,7 +11,7 @@ COPY services/$service_dir services/$service_dir
 COPY services/$service_dir/config.json ./
 
 RUN go install github.com/swaggo/swag/cmd/swag@latest
-RUN swag init --parseVendor --parseInternal --parseDependency -g services/$service_dir/main.go
+RUN (cd services/$service_dir/ && swag init --parseVendor --parseInternal --parseDependency)
 RUN go build -o service services/$service_dir/main.go
 
 # Second stage: Use a smaller image

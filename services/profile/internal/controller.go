@@ -131,7 +131,7 @@ func (o *App) Profiles(c echo.Context) error {
 // @Failure      400  {object}  string
 // @Failure      404  {object}  string
 // @Failure      500  {object}  string
-// @Router       /profile [get]
+// @Router       /profile/:userId [get]
 // @Security     BasicAuth
 func (o *App) Profile(c echo.Context) error {
 	ctx := c.Request().Context()
@@ -163,7 +163,7 @@ func (o *App) Profile(c echo.Context) error {
 // @Failure      400  {object}  string
 // @Failure      404  {object}  string
 // @Failure      500  {object}  string
-// @Router       /profile [post]
+// @Router       /profile/:userId [post]
 // @Security     BasicAuth
 func (o *App) SaveProfile(c echo.Context) error {
 	ctx := c.Request().Context()
@@ -199,7 +199,7 @@ func (o *App) SaveProfile(c echo.Context) error {
 // @Failure      400  {object}  string
 // @Failure      404  {object}  string
 // @Failure      500  {object}  string
-// @Router       /friends [get]
+// @Router       /profile/:userId/friends [get]
 // @Security     BasicAuth
 func (o *App) Friends(c echo.Context) error {
 	ctx := c.Request().Context()
@@ -248,7 +248,7 @@ func (o *App) Friends(c echo.Context) error {
 // @Failure      400  {object}  string
 // @Failure      404  {object}  string
 // @Failure      500  {object}  string
-// @Router       /friend [post]
+// @Router       /profile/:userId/friends [post]
 // @Security     BasicAuth
 func (o *App) AddFriend(c echo.Context) error {
 	ctx := c.Request().Context()
@@ -283,7 +283,7 @@ func (o *App) AddFriend(c echo.Context) error {
 // @Failure      400  {object}  string
 // @Failure      404  {object}  string
 // @Failure      500  {object}  string
-// @Router       /friend [delete]
+// @Router       /profile/:userId/friend/:friendId [delete]
 // @Security     BasicAuth
 func (o *App) DeleteFriend(c echo.Context) error {
 	ctx := c.Request().Context()
@@ -300,4 +300,30 @@ func (o *App) DeleteFriend(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, r)
+}
+
+// Generate godoc
+// @Summary      Generate users
+// @Description  generate n users
+// @Tags         admin
+// @Accept       json
+// @Produce      json
+// @Param        count query      int  true  "Count of users"
+// @Param        force query      bool  true  "Force generate with recreation"
+// @Success      200  {object}  int
+// @Failure      400  {object}  string
+// @Failure      404  {object}  string
+// @Failure      500  {object}  string
+// @Router       /admin/generate [post]
+// @Security     ApiKeyAuth
+func (o *App) Generate(c echo.Context) error {
+	/*
+		ctx := c.Request().Context()
+		r := new(types.Friend)
+
+		if err := c.Bind(r); err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
+		}
+	*/
+	return c.JSON(http.StatusOK, 1)
 }
