@@ -1,4 +1,406 @@
+basePath: /
+definitions:
+  social-network_services_profile_internal_types.PageResponse-types_Profile:
+    properties:
+      items:
+        description: page of items
+        items:
+          properties:
+            age:
+              description: user age
+              type: integer
+            city:
+              description: user city
+              type: string
+            firstName:
+              description: user first name
+              type: string
+            gender:
+              description: user gender
+              type: integer
+            hobbies:
+              description: user hobbies
+              type: string
+            lastName:
+              description: user last name
+              type: string
+            userId:
+              description: user identifier
+              type: integer
+          type: object
+        type: array
+      pageInfo:
+        $ref: '#/definitions/types.PageInfo'
+        description: page metadata
+    type: object
+  types.Friend:
+    properties:
+      friendId:
+        description: user friend identifier
+        type: integer
+      userId:
+        description: user identifier
+        type: integer
+    type: object
+  types.PageInfo:
+    properties:
+      count:
+        description: number of items per page
+        type: integer
+      from:
+        description: page start position
+        type: integer
+      total:
+        description: total elements
+        type: integer
+    type: object
+  types.Profile:
+    properties:
+      age:
+        description: user age
+        type: integer
+      city:
+        description: user city
+        type: string
+      firstName:
+        description: user first name
+        type: string
+      gender:
+        description: user gender
+        type: integer
+      hobbies:
+        description: user hobbies
+        type: string
+      lastName:
+        description: user last name
+        type: string
+      userId:
+        description: user identifier
+        type: integer
+    type: object
+  types.RegisterRequest:
+    properties:
+      age:
+        description: user age
+        type: integer
+      city:
+        description: user city
+        type: string
+      firstName:
+        description: user first name
+        type: string
+      gender:
+        description: user gender
+        type: integer
+      hobbies:
+        description: user hobbies
+        type: string
+      lastName:
+        description: user last name
+        type: string
+      login:
+        description: user login
+        type: string
+      password:
+        description: hashed password
+        type: string
+    type: object
+host: localhost:1323
 info:
   contact: {}
-paths: {}
+  description: This is a sample social-network server.
+  title: Swagger social-network API
+  version: "1.0"
+paths:
+  /friend:
+    delete:
+      consumes:
+      - application/json
+      description: delete friend by user id
+      parameters:
+      - description: User id
+        in: query
+        name: userId
+        required: true
+        type: integer
+      - description: Friend id
+        in: query
+        name: friendId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Friend'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Delete friend
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: add friend by user id
+      parameters:
+      - description: User id
+        in: query
+        name: userId
+        required: true
+        type: integer
+      - description: Friend id
+        in: query
+        name: friendId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Friend'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Add friend
+      tags:
+      - user
+  /friends:
+    get:
+      consumes:
+      - application/json
+      description: get page of friends
+      parameters:
+      - description: User id
+        in: query
+        name: userId
+        required: true
+        type: integer
+      - description: Page offset
+        in: query
+        name: offset
+        type: integer
+      - description: Page limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/social-network_services_profile_internal_types.PageResponse-types_Profile'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Show friends
+      tags:
+      - user
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: get profile by user id
+      parameters:
+      - description: User id
+        in: query
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Profile'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Show profile
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: save profile
+      parameters:
+      - description: Profile
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/types.Profile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Profile'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BasicAuth: []
+      summary: Save profile
+      tags:
+      - user
+  /profiles:
+    get:
+      consumes:
+      - application/json
+      description: get page of profiles
+      parameters:
+      - description: Page offset
+        in: query
+        name: offset
+        type: integer
+      - description: Page limit
+        in: query
+        name: limit
+        type: integer
+      - description: First name
+        in: query
+        name: firstName
+        required: true
+        type: string
+      - description: Last name
+        in: query
+        name: lastName
+        required: true
+        type: string
+      - description: Age
+        in: query
+        name: age
+        required: true
+        type: integer
+      - description: Gender
+        in: query
+        name: gender
+        required: true
+        type: integer
+      - description: City
+        in: query
+        name: city
+        required: true
+        type: string
+      - description: Hobbies
+        in: query
+        name: hobbies
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/social-network_services_profile_internal_types.PageResponse-types_Profile'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Show profiles
+      tags:
+      - public
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register new user
+      parameters:
+      - description: Register request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/types.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Profile'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Register new user
+      tags:
+      - public
+securityDefinitions:
+  BasicAuth:
+    type: basic
 swagger: "2.0"

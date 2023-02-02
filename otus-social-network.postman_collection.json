@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a70a8535-4ea7-48af-9a98-1e4fdcab6633",
+		"_postman_id": "650e201c-64aa-4c0f-87d0-1bb678c6a617",
 		"name": "otus-social-network",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2484151"
@@ -401,6 +401,7 @@
 						"exec": [
 							"pm.test(\"Successful get first user friends\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"    pm.expect(pm.response.json().pageInfo.total).greaterThan(0);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -528,7 +529,7 @@
 						"exec": [
 							"pm.test(\"Successful get first user empty friends list\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
-							"    pm.expect(pm.response.json().total).eq(0);",
+							"    pm.expect(pm.response.json().pageInfo.total).eq(0);",
 							"});"
 						],
 						"type": "text/javascript"
