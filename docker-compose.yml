@@ -17,7 +17,7 @@ services:
       args:
         - service_dir=profile
     environment:
-      CONNECTION_STRING: root:example@tcp(profile_db:3306)/profile?multiStatements=true&timeout=5s
+      CONNECTION_STRING: 'root:example@tcp(profile_db:3306)/?multiStatements=true&timeout=5s'
       PORT: 1323
     networks:
       - otus

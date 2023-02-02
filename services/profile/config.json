@@ -1,5 +1,5 @@
 {
   "db": {
-    "connectionString": "root:example@tcp(127.0.0.1:3306)/?multiStatements=true"
+    "connectionString": "root:example@tcp(localhost:3306)/?multiStatements=true"
   }
 }

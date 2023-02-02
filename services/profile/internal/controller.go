@@ -101,7 +101,7 @@ func (o *App) Profiles(c echo.Context) error {
 
 	var profiles = make([]types.Profile, 0)
 
-	err := r.ReadProfilesPage().Query(ctx, o.Db, profiles)
+	err := r.ReadProfilesPage().Query(ctx, o.Db, &profiles)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -217,7 +217,7 @@ func (o *App) Friends(c echo.Context) error {
 
 	var profiles = make([]types.Profile, 0)
 
-	err := r.ReadUserFriendsProfiles(pr).Query(ctx, o.Db, profiles)
+	err := r.ReadUserFriendsProfiles(pr).Query(ctx, o.Db, &profiles)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

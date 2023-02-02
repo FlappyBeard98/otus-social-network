@@ -3,6 +3,8 @@ package service
 
 import (
 	"database/sql"
+	"os"
+	"path/filepath"
 	"social-network/lib/http"
 	"social-network/lib/mysql"
 	"social-network/services/profile/internal/types"
@@ -20,6 +22,14 @@ type config struct {
 // LoadConfigFromJsonFile load configuration in Config struct
 func LoadConfig(path string) config {
 	var cfg config
+
+	exePath, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	dir := filepath.Dir(exePath)
+
+	path = filepath.Join(dir, path)
 
 	if err := cleanenv.ReadConfig(path, &cfg); err != nil {
 		panic(err)
