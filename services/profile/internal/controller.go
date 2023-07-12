@@ -44,7 +44,7 @@ func (o *App) Register(c echo.Context) error {
 
 	fn := func(ctx context.Context, tx pg.Db) error {
 
-		if err := auth.InsertAuth().QueryOne(ctx,tx, &profile.UserId); err != nil {
+		if err := auth.InsertAuth().QueryOne(ctx, tx, &profile.UserId); err != nil {
 			return err
 		}
 		if rowsAffected, err := profile.UpsertProfile().Exec(ctx, tx); err != nil {
@@ -246,8 +246,6 @@ func (o *App) AddFriend(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-
-	
 
 	if rowsAffected, err := r.InsertFriend().Exec(ctx, o.Db); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

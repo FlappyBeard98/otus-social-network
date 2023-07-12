@@ -36,12 +36,12 @@ func (o *ProfilesRequest) ReadProfilesTotal() *pg.SqlQuery {
 			COUNT(*) AS Total
 		FROM profiles.profiles
 		WHERE
-				(? IS NULL OR first_name LIKE ?)
-			AND (? IS NULL OR last_name LIKE ?)
-			AND (? IS NULL OR age = ?)
-			AND (? IS NULL OR gender = ?)
-			AND (? IS NULL OR city = ?)
-			AND (? IS NULL OR hobbies LIKE ?)
+				(cast($1 as varchar(100)) IS NULL OR first_name LIKE $2)
+			AND (cast($3 as varchar(150)) IS NULL OR last_name LIKE $4)
+			AND (cast($5 as int) IS NULL OR age = $6)
+			AND (cast($7 as int) IS NULL OR gender = $8)
+			AND (cast($9 as varchar(50)) IS NULL OR city = $10)
+			AND (cast($11 as text) IS NULL OR hobbies LIKE $12)
 		;`,
 		params...)
 }
@@ -76,13 +76,13 @@ func (o *ProfilesRequest) ReadProfilesPage() *pg.SqlQuery {
 			,hobbies
 		FROM profiles.profiles
 		WHERE
-				(? IS NULL OR first_name LIKE ?)
-			AND (? IS NULL OR last_name LIKE ?)
-			AND (? IS NULL OR age = ?)
-			AND (? IS NULL OR gender = ?)
-			AND (? IS NULL OR city = ?)
-			AND (? IS NULL OR hobbies LIKE ?)
-		LIMIT ?
-		OFFSET ?;`,
+				(cast($1 as varchar(100)) IS NULL OR first_name LIKE $2)
+			AND (cast($3 as varchar(150)) IS NULL OR last_name LIKE $4)
+			AND (cast($5 as int) IS NULL OR age = $6)
+			AND (cast($7 as int) IS NULL OR gender = $8)
+			AND (cast($9 as varchar(50)) IS NULL OR city = $10)
+			AND (cast($11 as text) IS NULL OR hobbies LIKE $12)
+		LIMIT $13
+		OFFSET $14;`,
 		params...)
 }

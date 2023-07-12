@@ -19,7 +19,7 @@ import (
 // Db is a wrapper for sql.DB
 type Db interface {
 	// ExecContext executes a query without returning any rows.
-	Query(context.Context,string,...any) (pgx.Rows, error)
+	Query(context.Context, string, ...any) (pgx.Rows, error)
 	// QueryRow executes a query that is expected to return at most one row.
 	QueryRow(context.Context, string, ...any) pgx.Row
 	Exec(ctx context.Context, sql string, arguments ...any) (pgconn.CommandTag, error)
@@ -37,8 +37,8 @@ func NewSqlQuery(sql string, params ...any) *SqlQuery {
 }
 
 // QueryOne executes query and scans one row into dst
-func (o *SqlQuery) QueryOne(ctx context.Context,db Db, dst any) error {
-	rows,err := db.Query(ctx,o.sql, o.params...)
+func (o *SqlQuery) QueryOne(ctx context.Context, db Db, dst any) error {
+	rows, err := db.Query(ctx, o.sql, o.params...)
 
 	if err != nil {
 		return fmt.Errorf("scany: query multiple result rows: %w", err)
@@ -59,8 +59,8 @@ func (o *SqlQuery) Query(ctx context.Context, db Db, dst any) error {
 
 // Exec executes query and returns result
 func (o *SqlQuery) Exec(ctx context.Context, db Db) (int64, error) {
-	
-	r, err := db.Exec(ctx,o.sql, o.params...)
+
+	r, err := db.Exec(ctx, o.sql, o.params...)
 
 	if err != nil {
 		return 0, err
@@ -68,7 +68,6 @@ func (o *SqlQuery) Exec(ctx context.Context, db Db) (int64, error) {
 
 	return r.RowsAffected(), nil
 }
-
 
 // Like prepares LIKE-statement for sql query
 func Like(str *string, pre bool, post bool) *string {
@@ -115,8 +114,6 @@ func BeginTxFunc(ctx context.Context, opts pgx.TxOptions, db *pgxpool.Pool, fn f
 	return nil
 }
 
-
-
 // DbConfig is a configuration for mysql connection
 type DbConfig struct {
 	ConnectionString string `json:"connectionString" env:"CONNECTION_STRING"` // ConnectionString is a connection string for mysql
@@ -125,7 +122,7 @@ type DbConfig struct {
 // Connect connects to mysql database
 func Connect(cfg DbConfig) (*pgxpool.Pool, error) {
 	ctx := context.Background()
-	db, err := pgxpool.New(ctx,cfg.ConnectionString)
+	db, err := pgxpool.New(ctx, cfg.ConnectionString)
 
 	if err != nil {
 		return nil, err

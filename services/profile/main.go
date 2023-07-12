@@ -12,7 +12,7 @@ import (
 	_ "social-network/services/profile/docs"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/swaggo/echo-swagger"
+	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,9 +25,10 @@ func createRouter(app service.App) *echo.Echo {
 
 	r.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}, error=${error}\n",
+		Output: log.Output(),
 	}))
 	r.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
-		StackSize: 1 << 10, // 1 KB
+		StackSize: 1 << 10,
 		LogLevel:  log.ERROR,
 	}))
 

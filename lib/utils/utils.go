@@ -3,6 +3,7 @@ package utils
 
 import (
 	"crypto/sha256"
+	b64 "encoding/base64"
 	"reflect"
 	"time"
 )
@@ -13,7 +14,7 @@ func GetHash(str string) string {
 	h.Write([]byte(str))
 	v := h.Sum(nil)
 
-	return string(v)
+	return b64.StdEncoding.EncodeToString(v)
 }
 
 // GetFieldsValuesAsSlice returns the fields of the structure as an slice

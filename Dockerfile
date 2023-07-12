@@ -15,7 +15,7 @@ RUN swag init --parseVendor --parseInternal --parseDependency -g services/$servi
 RUN go build -o service services/$service_dir/main.go
 
 # Second stage: Use a smaller image
-FROM alpine:latest
+FROM scratch
 
 COPY --from=build-env /go/src/app/service /usr/local/bin/
 COPY --from=build-env /go/src/app/config.json /usr/local/bin/

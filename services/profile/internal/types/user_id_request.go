@@ -23,7 +23,7 @@ func (o *UserIdRequest) ReadProfileByUserId() *pg.SqlQuery {
 			,hobbies
 		FROM profiles.profiles
 		WHERE
-			user_id = ?
+			user_id = $1
 		;`,
 		o.UserId)
 }
@@ -35,7 +35,7 @@ func (o *UserIdRequest) ReadUserFriendsTotal() *pg.SqlQuery {
 			COUNT(*) AS Total
 		FROM profiles.friends
 		WHERE
-			user_id = ?
+			user_id = $1
 		;`,
 		o.UserId)
 }
@@ -48,9 +48,9 @@ func (o *UserIdRequest) ReadUserFriendsProfiles(page *PageRequest) *pg.SqlQuery 
 				friend_user_id AS user_id
 			FROM profiles.friends
 			WHERE 
-				user_id = ?
-			LIMIT ?
-			OFFSET ?
+				user_id = $1
+			LIMIT $2
+			OFFSET $3
 		)
 		SELECT
 			p.user_id

@@ -28,7 +28,7 @@ func NewFriend(userId int64, friendId int64) (*Friend, error) {
 func (o *Friend) InsertFriend() *pg.SqlQuery {
 	return pg.NewSqlQuery(`
 		INSERT INTO profiles.friends(user_id, friend_user_id)
-		VALUES (?, ?)
+		VALUES ($1, $2)
 		;`,
 		o.UserId,
 		o.FriendId)
@@ -39,8 +39,8 @@ func (o *Friend) DeleteFriend() *pg.SqlQuery {
 	return pg.NewSqlQuery(`
 		DELETE FROM profiles.friends
 		WHERE
-			user_id = ?
-			AND friend_user_id = ?
+			user_id = $1
+			AND friend_user_id = $2
 		;`,
 		o.UserId,
 		o.FriendId)

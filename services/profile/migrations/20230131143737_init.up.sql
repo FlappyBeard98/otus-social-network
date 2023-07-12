@@ -5,7 +5,7 @@ create table if not exists profiles.auth
     user_id    BIGSERIAL
     primary key,
     login      varchar(250)  not null,
-    password   bytea not null,
+    password  varchar(150) not null,
     constraint login
     unique (login)
 );

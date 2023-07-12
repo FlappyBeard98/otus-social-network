@@ -36,19 +36,19 @@ func NewAuth(login string, rawPassword string) (*Auth, error) {
 func (o *Auth) InsertAuth() *pg.SqlQuery {
 	return pg.NewSqlQuery(`
 		INSERT INTO profiles.auth(login, password)
-		VALUES (?, ?)
-		RETURNING id;`,
+		VALUES ($1, $2)
+		RETURNING user_id;`,
 		o.Login,
-		o.Password)
+		[]byte(o.Password))
 }
 
 // UpdatePassword returns new pg.SqlQuery for updating password in database
 func (o *Auth) UpdatePassword() *pg.SqlQuery {
 	return pg.NewSqlQuery(`
 		UPDATE profiles.auth SET
-			password = ?
+			password = $1
 		WHERE
-			user_id = ?;`,
+			user_id = $2;`,
 		o.Password,
 		o.UserId)
 }
@@ -62,6 +62,6 @@ func (o *Auth) ReadByLogin() *pg.SqlQuery {
 			,password
 		FROM profiles.auth
 		WHERE
-			login = ?;`,
+			login = $1;`,
 		o.Login)
 }

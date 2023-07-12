@@ -15,7 +15,7 @@ services:
       args:
         - service_dir=profile
     environment:
-      CONNECTION_STRING: 'postgres://postgres:example@localhost:5432/postgres?sslmode=disable'
+      CONNECTION_STRING: 'postgres://postgres:example@profile_db:5432/postgres?sslmode=disable'
       PORT: 1323
     networks:
       - otus

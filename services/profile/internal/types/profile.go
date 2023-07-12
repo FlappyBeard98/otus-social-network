@@ -62,16 +62,15 @@ func NewProfile(firstName string,
 // UpsertProfile returns new mysql.SqlQuery for upserting user profile in database
 func (o *Profile) UpsertProfile() *pg.SqlQuery {
 	params := utils.GetFieldsValuesAsSlice(o)
-	params = append(params, params[1:]...)
 	return pg.NewSqlQuery(`
 		INSERT INTO profiles.profiles(user_id, first_name, last_name, age, gender, city, hobbies)
-		VALUES (?, ?, ?, ?, ?, ?, ?)
-		ON DUPLICATE KEY UPDATE 
-			first_name = ?
-			,last_name = ?
-			,age = ?
-			,gender = ?
-			,city = ?
-			,hobbies = ?;`,
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		ON CONFLICT (user_id) DO UPDATE SET
+			first_name = $2
+			,last_name = $3
+			,age = $4
+			,gender = $5
+			,city = $6
+			,hobbies = $7;`,
 		params...)
 }
