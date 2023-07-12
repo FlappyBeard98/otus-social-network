@@ -2,20 +2,20 @@
 package service
 
 import (
-	"database/sql"
 	"os"
 	"path/filepath"
 	"social-network/lib/http"
-	"social-network/lib/mysql"
+	"social-network/lib/pg"
 	"social-network/services/profile/internal/types"
 
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 )
 
 // config contains all configuration for service
 type config struct {
-	Db   mysql.DbConfig  `json:"db"`   // Database configuration
+	Db   pg.DbConfig     `json:"db"`   // Database configuration
 	Http http.HttpConfig `json:"http"` // Http configuration
 }
 
@@ -40,7 +40,7 @@ func LoadConfig(path string) config {
 
 // App contains all application logic
 type App struct {
-	Db *sql.DB // Database connection
+	Db *pgxpool.Pool // Database connection
 }
 
 // NewUserBasicAuth returns a function that can be used as a BasicAuthValidator

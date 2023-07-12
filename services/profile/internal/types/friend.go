@@ -2,7 +2,7 @@ package types
 
 import (
 	"errors"
-	"social-network/lib/mysql"
+	"social-network/lib/pg"
 )
 
 // Friend stores data about friendship
@@ -24,9 +24,9 @@ func NewFriend(userId int64, friendId int64) (*Friend, error) {
 	}, nil
 }
 
-// InsertFriend returns new mysql.SqlQuery for inserting friend link in database
-func (o *Friend) InsertFriend() *mysql.SqlQuery {
-	return mysql.NewSqlQuery(`
+// InsertFriend returns new pg.SqlQuery for inserting friend link in database
+func (o *Friend) InsertFriend() *pg.SqlQuery {
+	return pg.NewSqlQuery(`
 		INSERT INTO profiles.friends(user_id, friend_user_id)
 		VALUES (?, ?)
 		;`,
@@ -34,9 +34,9 @@ func (o *Friend) InsertFriend() *mysql.SqlQuery {
 		o.FriendId)
 }
 
-// DeleteFriend returns new mysql.SqlQuery for deleting friend link from database
-func (o *Friend) DeleteFriend() *mysql.SqlQuery {
-	return mysql.NewSqlQuery(`
+// DeleteFriend returns new pg.SqlQuery for deleting friend link from database
+func (o *Friend) DeleteFriend() *pg.SqlQuery {
+	return pg.NewSqlQuery(`
 		DELETE FROM profiles.friends
 		WHERE
 			user_id = ?

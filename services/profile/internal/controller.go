@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"net/http"
-	"social-network/lib/mysql"
+	"social-network/lib/pg"
 	"social-network/services/profile/internal/types"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/labstack/echo/v4"
 )
 
@@ -42,28 +42,21 @@ func (o *App) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	fn := func(ctx context.Context, tx *sql.Tx) error {
+	fn := func(ctx context.Context, tx pg.Db) error {
 
-		qr, err := auth.InsertAuth().Exec(ctx, tx)
-		if err != nil {
+		if err := auth.InsertAuth().QueryOne(ctx,tx, &profile.UserId); err != nil {
 			return err
 		}
-
-		profile.UserId = qr.LastInsertId
-
-		qr, err = profile.UpsertProfile().Exec(ctx, tx)
-		if err != nil {
+		if rowsAffected, err := profile.UpsertProfile().Exec(ctx, tx); err != nil {
 			return err
-		}
-
-		if qr.RowsAffected == 0 {
+		} else if rowsAffected == 0 {
 			return errors.New("profile was not saved")
 		}
 
 		return nil
 	}
 
-	err = mysql.BeginTxFunc(ctx, nil, o.Db, fn)
+	err = pg.BeginTxFunc(ctx, pgx.TxOptions{IsoLevel: pgx.ReadCommitted}, o.Db, fn)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -173,13 +166,9 @@ func (o *App) SaveProfile(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	qr, err := r.UpsertProfile().Exec(ctx, o.Db)
-
-	if err != nil {
+	if rowsAffected, err := r.UpsertProfile().Exec(ctx, o.Db); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	if qr.RowsAffected == 0 {
+	} else if rowsAffected == 0 {
 		return c.JSON(http.StatusInternalServerError, "profile was not saved")
 	}
 
@@ -258,13 +247,11 @@ func (o *App) AddFriend(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	qr, err := r.InsertFriend().Exec(ctx, o.Db)
+	
 
-	if err != nil {
+	if rowsAffected, err := r.InsertFriend().Exec(ctx, o.Db); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	if qr.RowsAffected == 0 {
+	} else if rowsAffected == 0 {
 		return c.JSON(http.StatusInternalServerError, "friend was not added")
 	}
 

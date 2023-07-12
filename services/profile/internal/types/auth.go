@@ -3,7 +3,7 @@ package types
 import (
 	"errors"
 
-	"social-network/lib/mysql"
+	"social-network/lib/pg"
 	"social-network/lib/utils"
 )
 
@@ -32,18 +32,19 @@ func NewAuth(login string, rawPassword string) (*Auth, error) {
 	}, nil
 }
 
-// InsertAuth returns new mysql.SqlQuery for inserting user auth in database
-func (o *Auth) InsertAuth() *mysql.SqlQuery {
-	return mysql.NewSqlQuery(`
+// InsertAuth returns new pg.SqlQuery for inserting user auth in database
+func (o *Auth) InsertAuth() *pg.SqlQuery {
+	return pg.NewSqlQuery(`
 		INSERT INTO profiles.auth(login, password)
-		VALUES (?, ?);`,
+		VALUES (?, ?)
+		RETURNING id;`,
 		o.Login,
 		o.Password)
 }
 
-// UpdatePassword returns new mysql.SqlQuery for updating password in database
-func (o *Auth) UpdatePassword() *mysql.SqlQuery {
-	return mysql.NewSqlQuery(`
+// UpdatePassword returns new pg.SqlQuery for updating password in database
+func (o *Auth) UpdatePassword() *pg.SqlQuery {
+	return pg.NewSqlQuery(`
 		UPDATE profiles.auth SET
 			password = ?
 		WHERE
@@ -52,9 +53,9 @@ func (o *Auth) UpdatePassword() *mysql.SqlQuery {
 		o.UserId)
 }
 
-// ReadByLogin returns new mysql.SqlQuery that returns user auth from database
-func (o *Auth) ReadByLogin() *mysql.SqlQuery {
-	return mysql.NewSqlQuery(`
+// ReadByLogin returns new pg.SqlQuery that returns user auth from database
+func (o *Auth) ReadByLogin() *pg.SqlQuery {
+	return pg.NewSqlQuery(`
 		SELECT
 			user_id
 			,login

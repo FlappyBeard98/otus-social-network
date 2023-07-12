@@ -1,7 +1,7 @@
 package types
 
 import (
-	"social-network/lib/mysql"
+	"social-network/lib/pg"
 )
 
 // ProfilesRequest used for return user profiles data
@@ -15,13 +15,13 @@ type ProfilesRequest struct {
 	PageRequest
 }
 
-// ReadProfilesTotal returns new mysql.SqlQuery for selecting total count of user profiles by filter in ProfilesRequest
-func (o *ProfilesRequest) ReadProfilesTotal() *mysql.SqlQuery {
+// ReadProfilesTotal returns new pg.SqlQuery for selecting total count of user profiles by filter in ProfilesRequest
+func (o *ProfilesRequest) ReadProfilesTotal() *pg.SqlQuery {
 	params := []any{
 		o.FirstName,
-		mysql.Like(o.FirstName, false, true),
+		pg.Like(o.FirstName, false, true),
 		o.LastName,
-		mysql.Like(o.LastName, false, true),
+		pg.Like(o.LastName, false, true),
 		o.Age,
 		o.Age,
 		o.Gender,
@@ -29,9 +29,9 @@ func (o *ProfilesRequest) ReadProfilesTotal() *mysql.SqlQuery {
 		o.City,
 		o.City,
 		o.Hobbies,
-		mysql.Like(o.Hobbies, true, true),
+		pg.Like(o.Hobbies, true, true),
 	}
-	return mysql.NewSqlQuery(`
+	return pg.NewSqlQuery(`
 		SELECT
 			COUNT(*) AS Total
 		FROM profiles.profiles
@@ -46,13 +46,13 @@ func (o *ProfilesRequest) ReadProfilesTotal() *mysql.SqlQuery {
 		params...)
 }
 
-// ReadProfilesPage returns new mysql.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
-func (o *ProfilesRequest) ReadProfilesPage() *mysql.SqlQuery {
+// ReadProfilesPage returns new pg.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
+func (o *ProfilesRequest) ReadProfilesPage() *pg.SqlQuery {
 	params := []any{
 		o.FirstName,
-		mysql.Like(o.FirstName, false, true),
+		pg.Like(o.FirstName, false, true),
 		o.LastName,
-		mysql.Like(o.LastName, false, true),
+		pg.Like(o.LastName, false, true),
 		o.Age,
 		o.Age,
 		o.Gender,
@@ -60,12 +60,12 @@ func (o *ProfilesRequest) ReadProfilesPage() *mysql.SqlQuery {
 		o.City,
 		o.City,
 		o.Hobbies,
-		mysql.Like(o.Hobbies, true, true),
+		pg.Like(o.Hobbies, true, true),
 		o.Limit,
 		o.Offset,
 	}
 
-	return mysql.NewSqlQuery(`
+	return pg.NewSqlQuery(`
 		SELECT
 			user_id
 			,first_name

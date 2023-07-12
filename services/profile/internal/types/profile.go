@@ -3,7 +3,7 @@ package types
 import (
 	"errors"
 
-	"social-network/lib/mysql"
+	"social-network/lib/pg"
 	"social-network/lib/utils"
 )
 
@@ -60,10 +60,10 @@ func NewProfile(firstName string,
 }
 
 // UpsertProfile returns new mysql.SqlQuery for upserting user profile in database
-func (o *Profile) UpsertProfile() *mysql.SqlQuery {
+func (o *Profile) UpsertProfile() *pg.SqlQuery {
 	params := utils.GetFieldsValuesAsSlice(o)
 	params = append(params, params[1:]...)
-	return mysql.NewSqlQuery(`
+	return pg.NewSqlQuery(`
 		INSERT INTO profiles.profiles(user_id, first_name, last_name, age, gender, city, hobbies)
 		VALUES (?, ?, ?, ?, ?, ?, ?)
 		ON DUPLICATE KEY UPDATE 

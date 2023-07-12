@@ -1,5 +1,5 @@
 {
   "db": {
-    "connectionString": "root:example@tcp(localhost:3306)/?multiStatements=true"
+    "connectionString": "postgres://postgres:example@localhost:5432/postgres?sslmode=disable"
   }
 }

@@ -1,11 +1,11 @@
-create database if not exists profiles;
+create schema if not exists profiles;
 
 create table if not exists profiles.auth
 (
-    user_id    bigint auto_increment
+    user_id    BIGSERIAL
     primary key,
-    login      nvarchar(250)  not null,
-    password   varbinary(1000) not null,
+    login      varchar(250)  not null,
+    password   bytea not null,
     constraint login
     unique (login)
 );
@@ -17,9 +17,9 @@ create table if not exists profiles.friends
     friend_user_id bigint not null,
     primary key (user_id, friend_user_id),
     constraint friends_auth_left_user_id_fk
-    foreign key (user_id) references auth (user_id),
+    foreign key (user_id) references profiles.auth (user_id),
     constraint friends_auth_right_user_id_fk
-    foreign key (friend_user_id) references auth (user_id)
+    foreign key (friend_user_id) references profiles.auth (user_id)
 );
 
 create table if not exists profiles.profiles
@@ -33,6 +33,5 @@ create table if not exists profiles.profiles
     city       varchar(50)  not null default '',
     hobbies    text         not null,
     constraint profile_auth_user_id_fk
-    foreign key (user_id) references auth (user_id)
+    foreign key (user_id) references profiles.auth (user_id)
 );
-

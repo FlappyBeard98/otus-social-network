@@ -2,16 +2,16 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"social-network/lib/http"
-	"social-network/lib/mysql"
+	"social-network/lib/pg"
 	"social-network/lib/utils"
 	service "social-network/services/profile/internal"
 	"time"
 
 	_ "social-network/services/profile/docs"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/swaggo/echo-swagger"
 
 	"github.com/labstack/echo/v4"
@@ -41,7 +41,7 @@ func createRouter(app service.App) *echo.Echo {
 	authed.POST("/:userId/friends/:friendUserId", app.AddFriend)
 	authed.DELETE("/:userId/friends/:friendUserId", app.DeleteFriend)
 
-	r.GET("/swagger/*", echoSwagger.WrapHandler)
+	r.GET("/swagger*", echoSwagger.WrapHandler)
 
 	_ = r.Group("admin", http.NewKeyMiddleware(qaKey))
 
@@ -78,9 +78,9 @@ func main() {
 	http.StartHttpServer(r, cfg.Http)
 }
 
-func createConnectRetry(db mysql.DbConfig) func() (*sql.DB, error) {
-	return func() (*sql.DB, error) {
-		c, err := mysql.Connect(db)
+func createConnectRetry(db pg.DbConfig) func() (*pgxpool.Pool, error) {
+	return func() (*pgxpool.Pool, error) {
+		c, err := pg.Connect(db)
 		if err != nil {
 			return nil, fmt.Errorf("%w; connection %s", err, db.ConnectionString)
 		}

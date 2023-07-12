@@ -1,7 +1,7 @@
 package types
 
 import (
-	"social-network/lib/mysql"
+	"social-network/lib/pg"
 )
 
 // UserIdRequest used for http requests with userId
@@ -10,9 +10,9 @@ type UserIdRequest struct {
 
 }
 
-// ReadProfilesTotal returns new mysql.SqlQuery for selecting total count of user profiles by filter in ProfilesRequest
-func (o *UserIdRequest) ReadProfileByUserId() *mysql.SqlQuery {
-	return mysql.NewSqlQuery(`
+// ReadProfilesTotal returns new pg.SqlQuery for selecting total count of user profiles by filter in ProfilesRequest
+func (o *UserIdRequest) ReadProfileByUserId() *pg.SqlQuery {
+	return pg.NewSqlQuery(`
 		SELECT
 			user_id
 			,first_name
@@ -28,9 +28,9 @@ func (o *UserIdRequest) ReadProfileByUserId() *mysql.SqlQuery {
 		o.UserId)
 }
 
-// ReadProfilesPage returns new mysql.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
-func (o *UserIdRequest) ReadUserFriendsTotal() *mysql.SqlQuery {
-	return mysql.NewSqlQuery(`
+// ReadProfilesPage returns new pg.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
+func (o *UserIdRequest) ReadUserFriendsTotal() *pg.SqlQuery {
+	return pg.NewSqlQuery(`
 		SELECT
 			COUNT(*) AS Total
 		FROM profiles.friends
@@ -40,9 +40,9 @@ func (o *UserIdRequest) ReadUserFriendsTotal() *mysql.SqlQuery {
 		o.UserId)
 }
 
-// ReadProfilesPage returns new mysql.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
-func (o *UserIdRequest) ReadUserFriendsProfiles(page *PageRequest) *mysql.SqlQuery {
-	return mysql.NewSqlQuery(`
+// ReadProfilesPage returns new pg.SqlQuery for selecting page of user profiles by filter in ProfilesRequest
+func (o *UserIdRequest) ReadUserFriendsProfiles(page *PageRequest) *pg.SqlQuery {
+	return pg.NewSqlQuery(`
 		WITH friends_page AS (
 			SELECT
 				friend_user_id AS user_id
